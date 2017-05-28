@@ -8,7 +8,7 @@ import fr.timotheecraig.keypredistribution.util.Polynomial;
 public class Key {
 
     public static String createKeyFromPolynomial(Polynomial p) {
-        String ret = "TODO: createKeyFromPolynomial";
+        String ret = "(KEY) TODO: generate key from polynomial";
         return ret;
     }
 

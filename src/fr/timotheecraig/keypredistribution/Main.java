@@ -1,5 +1,7 @@
 package fr.timotheecraig.keypredistribution;
 
+import fr.timotheecraig.keypredistribution.main.Network;
+
 /**
  * Created by Timothee on 11/04/2017.
  */
@@ -9,7 +11,11 @@ public class Main {
         /* TODO: Generate a network of nodes, predestribute polynomials, Compare them from node to node
            generate keys accordingly
         */
+        System.out.println("Key Predistrbution Simulation - By Timothée Craig");
+        System.out.println("-------------------------------------------------");
 
+        Network network = Network.getDefault();
+        System.out.println(network);
 
     }
 

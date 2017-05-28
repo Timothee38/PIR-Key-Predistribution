@@ -14,4 +14,10 @@ public class Node {
     private Coordinates coordinates;
     private ArrayList<Key> keys;
 
+    public Node(String name, Coordinates coords, ArrayList<Key> keys) {
+        this.name = name;
+        this.coordinates = coords;
+        this.keys = keys;
+    }
+
 }
