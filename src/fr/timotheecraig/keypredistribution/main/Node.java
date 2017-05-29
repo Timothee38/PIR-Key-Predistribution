@@ -19,6 +19,15 @@ public class Node {
         return id;
     }
 
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(int x, int y) {
+        int[] newCoords = {x, y};
+        this.coordinates.setCoords(newCoords);
+    }
+
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }

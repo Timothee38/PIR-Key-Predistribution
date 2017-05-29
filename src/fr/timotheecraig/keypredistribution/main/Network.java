@@ -81,6 +81,11 @@ public class Network {
         return new Network();
     }
 
+    public double distanceBetween(Node nodeA, Node nodeB) {
+        return Math.sqrt(Math.pow(nodeA.getCoordinates().getX() - nodeB.getCoordinates().getX(), 2)
+                             + Math.pow(nodeA.getCoordinates().getY() - nodeB.getCoordinates().getY(), 2));
+    }
+
     @Override
     public String toString() {
         int nodesLen = this.nodes != null ? this.nodes.size() : 0;

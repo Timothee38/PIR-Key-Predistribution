@@ -1,6 +1,9 @@
 package fr.timotheecraig.keypredistribution;
 
 import fr.timotheecraig.keypredistribution.main.Network;
+import fr.timotheecraig.keypredistribution.main.Node;
+
+import java.util.ArrayList;
 
 /**
  * Created by Timothee on 11/04/2017.
