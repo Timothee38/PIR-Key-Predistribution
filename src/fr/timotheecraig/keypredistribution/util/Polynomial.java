@@ -11,10 +11,18 @@ public class Polynomial {
     private int identifier;
     private int[] coefs; // [a, b, c...n] => a + b*x*y + c*x²y²+...+n*(x^n)*(y^n)
 
+    /**
+     * Get the identifier of a polynomial
+     * @return the identifier of a polynomial
+     */
     public int getIdentifier() {
         return identifier;
     }
 
+    /**
+     * Get the coefficients of a polynomial : [a, b, c...n] => a + b*x*y + c*x²y²+...+n*(x^n)*(y^n)
+     * @return the coefs of a polynomial
+     */
     public int[] getCoefs() {
         return coefs;
     }

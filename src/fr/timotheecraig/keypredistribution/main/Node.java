@@ -19,34 +19,6 @@ public class Node {
     private List<Polynomial> polynomials;
     private ArrayList<Node> neighbours;
 
-    public int getId() {
-        return id;
-    }
-
-    public int getEmissionRadius() {
-        return emissionRadius;
-    }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public List<Polynomial> getPolynomials() { return polynomials; }
-
-    public void setCoordinates(int x, int y) {
-        int[] newCoords = {x, y};
-        this.coordinates.setCoords(newCoords);
-    }
-
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public void addNeighbour(Node node) {
-        this.neighbours = this.neighbours == null ? new ArrayList<Node>() : this.neighbours;
-        this.neighbours.add(node);
-    }
-
     public Node(int id, String name, Coordinates coords, int emissionRadius, List<Polynomial> keys) {
         this.id = id;
         this.name = name;
@@ -55,6 +27,66 @@ public class Node {
         this.polynomials = keys;
     }
 
+    /**
+     * Get a node's identifier.
+     * @return id of the node
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Get the radius of a node.
+     * @return emissionRadius of a node.
+     */
+    public int getEmissionRadius() {
+        return emissionRadius;
+    }
+
+    /**
+     * Get coordinates of a node
+     * @return coordinates of a node
+     */
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    /**
+     * Get the polynomials of a node.
+     * @return polynomials of a node
+     */
+    public List<Polynomial> getPolynomials() { return polynomials; }
+
+    /**
+     * Set a node's coordinates.
+     * @param x node's value on x-axis
+     * @param y node's value on y-axis
+     */
+    public void setCoordinates(int x, int y) {
+        int[] newCoords = {x, y};
+        this.coordinates.setCoords(newCoords);
+    }
+
+    /**
+     * Set a node's coordinates.
+     * @param coordinates node's formatted coordinates
+     */
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    /**
+     * Add a neighbour to a node.
+     * @param node the neighbour to add
+     */
+    public void addNeighbour(Node node) {
+        this.neighbours = this.neighbours == null ? new ArrayList<Node>() : this.neighbours;
+        this.neighbours.add(node);
+    }
+
+    /**
+     * Display the neighbours of a node.
+     */
     public void displayNeighbours() {
         if(this.neighbours != null) {
             for(Node neighbour: this.neighbours) {
@@ -63,6 +95,9 @@ public class Node {
         }
     }
 
+    /**
+     * Display polynomials of a node.
+     */
     public void displayPolynomials() {
         if(this.polynomials != null) {
             /*for(Polynomial polynomial: this.polynomials) {
@@ -72,6 +107,10 @@ public class Node {
         }
     }
 
+    /**
+     * Set the polynomials of a node
+     * @param pol list of polynomials to copy
+     */
     public void distributePolynomials(List<Polynomial> pol) {
         // this.polynomials = pol; -> Keeping this here, we must COPY pol to polynomials, not set it to "=" as it's modified later on
         this.polynomials = new ArrayList<Polynomial>(pol);

@@ -13,6 +13,11 @@ public class Key {
         this.keyString = keyString;
     }
 
+    /**
+     * Generate a random key composed of random characters.
+     * @param sizeOfKey the amount of random characters
+     * @return a new Key from the generated String
+     */
     public static Key createRandomKey(int sizeOfKey) {
         String ret = "";
         for(int i = 0; i < sizeOfKey; i++) {
@@ -21,6 +26,11 @@ public class Key {
         return new Key(ret);
     }
 
+    /**
+     * Generate a key from a polynomial.
+     * @param p a polynomial
+     * @return a new Key from the generated String
+     */
     public static String createKeyFromPolynomial(Polynomial p) {
         String ret = "(KEY) TODO: generate key from polynomial";
         return ret;

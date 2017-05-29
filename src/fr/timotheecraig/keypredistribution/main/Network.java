@@ -47,6 +47,9 @@ public class Network {
         this.addAmountOfNodes(5); // here for debug
     }
 
+    /**
+     * Display all the nodes from the network.
+     */
     public void displayNodes() {
         if(this.nodes != null) {
             for(int i = 0; i < this.nodes.size(); i++) {
@@ -58,6 +61,9 @@ public class Network {
         }
     }
 
+    /**
+     * Display all the keys from the network.
+     */
     public void displayKeys() {
         if(this.keys != null) {
             for(int i = 0; i < this.keys.size(); i++) {
@@ -69,6 +75,24 @@ public class Network {
         }
     }
 
+    /**
+     * Display all the polynomials from the network.
+     */
+    public void displayPolynomialPool() {
+        if(this.mainPolynomialsPool != null) {
+            for(int i = 0; i < this.mainPolynomialsPool.size(); i++) {
+                System.out.println(this.mainPolynomialsPool.get(i));
+            }
+        }
+        else {
+            System.out.println("No polynomials set for this network.");
+        }
+    }
+
+    /**
+     * Add nodes to the network.
+     * @param amount amount of nodes to add
+     */
     public void addAmountOfNodes(int amount) {
         String nodeName = "node-";
         if(this.nodes == null) {
@@ -91,6 +115,11 @@ public class Network {
         }
     }
 
+    /**
+     * Add keys to the network.
+     * @param amount amount of keys to add
+     * @param keySize amount of characters to define the key size
+     */
     public void addAmountOfKeys(int amount, int keySize) {
         this.keys = this.keys == null ? new ArrayList<Key>() :this.keys;
         for(int i = 0; i < amount; i++) {
@@ -98,26 +127,28 @@ public class Network {
         }
     }
 
+    /**
+     * Get default network setup
+     * @return a default network by the name "default network"
+     */
     public static Network getDefault() {
         return new Network();
     }
 
+    /**
+     * Calculate the distance between two nodes.
+     * @param nodeA A node of the network
+     * @param nodeB Another node of the network
+     * @return the distance between two nodes.
+     */
     public double distanceBetween(Node nodeA, Node nodeB) {
         return Math.sqrt(Math.pow(nodeA.getCoordinates().getX() - nodeB.getCoordinates().getX(), 2)
                              + Math.pow(nodeA.getCoordinates().getY() - nodeB.getCoordinates().getY(), 2));
     }
 
-    public void displayPolynomialPool() {
-        if(this.mainPolynomialsPool != null) {
-            for(int i = 0; i < this.mainPolynomialsPool.size(); i++) {
-                System.out.println(this.mainPolynomialsPool.get(i));
-            }
-        }
-        else {
-            System.out.println("No polynomials set for this network.");
-        }
-    }
-
+    /**
+     * Compares the distance between each node and set them as neighbours if they are in the node radius.
+     */
     public void neighbourDiscovery() {
         for(int i = 0; i < this.nodes.size(); i++) {
             Node nodeToCompare = this.nodes.get(i);
@@ -132,6 +163,12 @@ public class Network {
         }
     }
 
+    /**
+     * This method is used to generate a polynomial master pool for the network.
+     * @param amount Amount of polynomials to generate
+     * @param maxPolynomialOrder The maximum order for all polynomials
+     * @param biggestCoef The maximum/minimum coefficient integer
+     */
     public void generatePolynomialPool(int amount, int maxPolynomialOrder, int biggestCoef) {
         if(this.mainPolynomialsPool == null) {
             this.mainPolynomialsPool = new ArrayList<Polynomial>();
@@ -158,7 +195,10 @@ public class Network {
 
     }
 
-
+    /**
+     * This method pre-distributes a set of polynomials to each node in the network.
+     * @param amountOfPolynomialsToDistribute This is the amount of polynomials to distribute per node.
+     */
     public void predistributePolynomials(int amountOfPolynomialsToDistribute) {
         ArrayList<Polynomial> copy = this.mainPolynomialsPool;
         if (this.mainPolynomialsPool != null) {
