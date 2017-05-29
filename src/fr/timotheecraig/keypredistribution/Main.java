@@ -15,13 +15,16 @@ public class Main {
         /* TODO: Generate a network of nodes, predestribute polynomials, Compare them from node to node
            generate keys accordingly
         */
-        System.out.println("Key Predistrbution Simulation - By Timothée Craig");
+        System.out.println("Key Predistribution Simulation - By Timothée Craig");
         System.out.println("-------------------------------------------------");
 
         Network network = Network.getDefault();
         //network.displayNodes(); // Nodes coordinates are random atm, will need to find something better, not sure what yet though
 
         network.addAmountOfKeys(200, 2048);
+
+        network.generatePolynomialPool(100,10,50);
+        //network.displayPolynomialPool();
 
         System.out.println(network);
 
@@ -30,10 +33,14 @@ public class Main {
         System.out.println("-------------------------------------------------");
         network.neighbourDiscovery();
 
+        /*
         for (Node node : network.getNodes()) {
             System.out.println(node);
-            //node.displayNeighbours();
         }
+        */
+        System.out.println("             Distributing polynomials            ");
+        System.out.println("-------------------------------------------------");
+
 
     }
 

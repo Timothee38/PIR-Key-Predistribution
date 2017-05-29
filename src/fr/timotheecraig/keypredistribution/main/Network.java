@@ -65,7 +65,7 @@ public class Network {
             }
         }
         else {
-            System.out.println("No nodes set for this network.");
+            System.out.println("No keys set for this network.");
         }
     }
 
@@ -107,6 +107,17 @@ public class Network {
                              + Math.pow(nodeA.getCoordinates().getY() - nodeB.getCoordinates().getY(), 2));
     }
 
+    public void displayPolynomialPool() {
+        if(this.mainPolynomialsPool != null) {
+            for(int i = 0; i < this.mainPolynomialsPool.size(); i++) {
+                System.out.println(this.mainPolynomialsPool.get(i));
+            }
+        }
+        else {
+            System.out.println("No polynomials set for this network.");
+        }
+    }
+
     public void neighbourDiscovery() {
         for(int i = 0; i < this.nodes.size(); i++) {
             Node nodeToCompare = this.nodes.get(i);
@@ -119,6 +130,32 @@ public class Network {
                 }
             }
         }
+    }
+
+    public void generatePolynomialPool(int amount, int maxPolynomialOrder, int biggestCoef) {
+        if(this.mainPolynomialsPool == null) {
+            this.mainPolynomialsPool = new ArrayList<Polynomial>();
+            for(int i = 0; i < amount; i++) {
+                int polynomialSize = (int)(Math.random()*maxPolynomialOrder+1);
+                int coefs[] = new int[polynomialSize];
+                for(int j = 0; j < polynomialSize; j++) {
+                    coefs[j] = ThreadLocalRandom.current().nextInt(-biggestCoef, biggestCoef + 1);
+                }
+                this.mainPolynomialsPool.add(new Polynomial(i+1, coefs));
+            }
+        }
+        else {
+            int lastPolynomialId = this.mainPolynomialsPool.get(this.mainPolynomialsPool.size() - 1).getIdentifier();
+            for(int i = lastPolynomialId; i < (lastPolynomialId + amount); i++) {
+                int polynomialSize = (int)(Math.random()*maxPolynomialOrder+1);
+                int coefs[] = new int[polynomialSize];
+                for(int j = 0; j < polynomialSize; j++) {
+                    coefs[j] = ThreadLocalRandom.current().nextInt(-biggestCoef, biggestCoef + 1);
+                }
+                this.mainPolynomialsPool.add(new Polynomial(i+1, coefs));
+            }
+        }
+
     }
 
     @Override
