@@ -16,7 +16,7 @@ public class Main {
 
         Network network = Network.getDefault();
         System.out.println(network);
-
+        network.displayNodes(); // Nodes coordinates are random atm, will need to find something better, not sure what yet though
     }
 
 }
