@@ -16,7 +16,7 @@ public class Main {
            generate keys accordingly
         */
         System.out.println("Key Predistribution Simulation - By Timothée Craig");
-        System.out.println("-------------------------------------------------");
+        System.out.println("--------------------------------------------------");
 
         Network network = Network.getDefault();
         //network.displayNodes(); // Nodes coordinates are random atm, will need to find something better, not sure what yet though
@@ -28,19 +28,22 @@ public class Main {
 
         System.out.println(network);
 
-        // network.displayKeys(); // Keys are random atm, better make it less random sometime
-        System.out.println("        Initializing neighbour discovery         ");
-        System.out.println("-------------------------------------------------");
-        network.neighbourDiscovery();
-
         /*
         for (Node node : network.getNodes()) {
             System.out.println(node);
         }
         */
-        System.out.println("             Distributing polynomials            ");
-        System.out.println("-------------------------------------------------");
+        System.out.println("            Pre-Distributing polynomials          ");
+        System.out.println("--------------------------------------------------");
+        network.predistributePolynomials(5);
 
+        network.getNodes().forEach(Node::displayPolynomials);
+
+        // network.displayKeys(); // Keys are random atm, better make it less random sometime
+        System.out.println("                     Deploying...                 ");
+        System.out.println("         Initializing neighbour discovery         ");
+        System.out.println("--------------------------------------------------");
+        network.neighbourDiscovery();
 
     }
 

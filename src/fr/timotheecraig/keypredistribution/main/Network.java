@@ -4,7 +4,7 @@ import fr.timotheecraig.keypredistribution.util.Coordinates;
 import fr.timotheecraig.keypredistribution.util.Key;
 import fr.timotheecraig.keypredistribution.util.Polynomial;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -158,11 +158,26 @@ public class Network {
 
     }
 
+
+    public void predistributePolynomials(int amountOfPolynomialsToDistribute) {
+        ArrayList<Polynomial> copy = this.mainPolynomialsPool;
+        if (this.mainPolynomialsPool != null) {
+            amountOfPolynomialsToDistribute =
+                    amountOfPolynomialsToDistribute <= this.mainPolynomialsPool.size() ?
+                            amountOfPolynomialsToDistribute : this.mainPolynomialsPool.size();
+            for (Node node : this.nodes) {
+                Collections.shuffle(copy);//-> lol this doesnt work it seems
+                List<Polynomial> subList = copy.subList(0, amountOfPolynomialsToDistribute);
+                //System.out.println(subList);
+                node.distributePolynomials(subList);
+            }
+        }
+    }
+
     @Override
     public String toString() {
         int nodesLen = this.nodes != null ? this.nodes.size() : 0;
         int keyPoolLen = this.mainPolynomialsPool != null ? this.mainPolynomialsPool.size() : 0;
         return this.name + " : " + nodesLen + " nodes, " + keyPoolLen + " keys";
     }
-
 }
