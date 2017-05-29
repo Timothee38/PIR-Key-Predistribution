@@ -15,6 +15,7 @@ public class Network {
     private String name;
     private ArrayList<Node> nodes;
     private ArrayList<Polynomial> mainPolynomialsPool;
+    private ArrayList<Key> keys; // This will be replaced with the main polynomials pool later on
 
     // Accessors
     public String getName() {
@@ -57,6 +58,17 @@ public class Network {
         }
     }
 
+    public void displayKeys() {
+        if(this.keys != null) {
+            for(int i = 0; i < this.keys.size(); i++) {
+                System.out.println(this.keys.get(i));
+            }
+        }
+        else {
+            System.out.println("No nodes set for this network.");
+        }
+    }
+
     public void addAmountOfNodes(int amount) {
         String nodeName = "node-";
         if(this.nodes == null) {
@@ -64,7 +76,8 @@ public class Network {
             for(int i = 0; i < amount; i++) {
                 int randomX = ThreadLocalRandom.current().nextInt(0, 200 + 1);
                 int randomY = ThreadLocalRandom.current().nextInt(0, 200 + 1);
-                this.nodes.add(new Node((i+1) , nodeName+(i+1), new Coordinates(randomX, randomY), null));
+                int randomEmissionRadius = ThreadLocalRandom.current().nextInt(30, 40 + 1);
+                this.nodes.add(new Node((i+1) , nodeName+(i+1), new Coordinates(randomX, randomY), randomEmissionRadius, null));
             }
         }
         else {
@@ -72,8 +85,16 @@ public class Network {
             for (int i = lastNodeId; i < (amount + lastNodeId); i++) {
                 int randomX = ThreadLocalRandom.current().nextInt(0, 200 + 1);
                 int randomY = ThreadLocalRandom.current().nextInt(0, 200 + 1);
-                this.nodes.add(new Node((i+1), nodeName+(i+1), new Coordinates(randomX, randomY), null));
+                int randomEmissionRadius = ThreadLocalRandom.current().nextInt(30, 40 + 1);
+                this.nodes.add(new Node((i+1), nodeName+(i+1), new Coordinates(randomX, randomY), randomEmissionRadius, null));
             }
+        }
+    }
+
+    public void addAmountOfKeys(int amount, int keySize) {
+        this.keys = this.keys == null ? new ArrayList<Key>() :this.keys;
+        for(int i = 0; i < amount; i++) {
+            this.keys.add(Key.createRandomKey(keySize));
         }
     }
 
@@ -84,6 +105,20 @@ public class Network {
     public double distanceBetween(Node nodeA, Node nodeB) {
         return Math.sqrt(Math.pow(nodeA.getCoordinates().getX() - nodeB.getCoordinates().getX(), 2)
                              + Math.pow(nodeA.getCoordinates().getY() - nodeB.getCoordinates().getY(), 2));
+    }
+
+    public void neighbourDiscovery() {
+        for(int i = 0; i < this.nodes.size(); i++) {
+            Node nodeToCompare = this.nodes.get(i);
+            for(int j = 0; j < this.nodes.size(); j++) {
+                if(i != j) {
+                    Node potentialNeighbour =  this.nodes.get(j);
+                    if(distanceBetween(nodeToCompare, potentialNeighbour) <= nodeToCompare.getEmissionRadius()) {
+                        nodeToCompare.addNeighbour(potentialNeighbour);
+                    }
+                }
+            }
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package fr.timotheecraig.keypredistribution;
 
 import fr.timotheecraig.keypredistribution.main.Network;
 import fr.timotheecraig.keypredistribution.main.Node;
+import fr.timotheecraig.keypredistribution.util.Key;
 
 import java.util.ArrayList;
 
@@ -18,8 +19,22 @@ public class Main {
         System.out.println("-------------------------------------------------");
 
         Network network = Network.getDefault();
+        //network.displayNodes(); // Nodes coordinates are random atm, will need to find something better, not sure what yet though
+
+        network.addAmountOfKeys(200, 2048);
+
         System.out.println(network);
-        network.displayNodes(); // Nodes coordinates are random atm, will need to find something better, not sure what yet though
+
+        // network.displayKeys(); // Keys are random atm, better make it less random sometime
+        System.out.println("        Initializing neighbour discovery         ");
+        System.out.println("-------------------------------------------------");
+        network.neighbourDiscovery();
+
+        for (Node node : network.getNodes()) {
+            System.out.println(node);
+            //node.displayNeighbours();
+        }
+
     }
 
 }

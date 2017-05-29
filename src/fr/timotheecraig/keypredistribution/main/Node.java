@@ -2,6 +2,7 @@ package fr.timotheecraig.keypredistribution.main;
 
 import fr.timotheecraig.keypredistribution.util.Key;
 import fr.timotheecraig.keypredistribution.util.Coordinates;
+import fr.timotheecraig.keypredistribution.util.Polynomial;
 
 import java.util.ArrayList;
 
@@ -13,10 +14,16 @@ public class Node {
     private int id;
     private String name;
     private Coordinates coordinates;
-    private ArrayList<Key> keys;
+    private int emissionRadius; // max radius to which the node can find its neighbours
+    private ArrayList<Polynomial> polynomials;
+    private ArrayList<Node> neighbours;
 
     public int getId() {
         return id;
+    }
+
+    public int getEmissionRadius() {
+        return emissionRadius;
     }
 
     public Coordinates getCoordinates() {
@@ -32,16 +39,31 @@ public class Node {
         this.coordinates = coordinates;
     }
 
-    public Node(int id, String name, Coordinates coords, ArrayList<Key> keys) {
+    public void addNeighbour(Node node) {
+        this.neighbours = this.neighbours == null ? new ArrayList<Node>() : this.neighbours;
+        this.neighbours.add(node);
+    }
+
+    public Node(int id, String name, Coordinates coords, int emissionRadius, ArrayList<Polynomial> keys) {
         this.id = id;
         this.name = name;
         this.coordinates = coords;
-        this.keys = keys;
+        this.emissionRadius = emissionRadius;
+        this.polynomials = keys;
+    }
+
+    public void displayNeighbours() {
+        if(this.neighbours != null) {
+            for(Node neighbour: this.neighbours) {
+                System.out.println(neighbour.toString());
+            }
+        }
     }
 
     @Override
     public String toString() {
-        return this.name + " : " + this.coordinates;
+        int neighbourSize = this.neighbours != null ? this.neighbours.size() : 0;
+        return this.name + " : " + this.coordinates + ", radius: " + this.emissionRadius + "m, " + neighbourSize + " neighbours";
     }
 
 }
