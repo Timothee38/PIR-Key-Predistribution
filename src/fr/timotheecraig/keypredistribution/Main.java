@@ -59,17 +59,10 @@ public class Main {
         System.out.println("--------------------------------------------------");
         System.out.println("");
 
-        //network.createPaths();
-        //network.displayLinks();
-        //network.displayNodes();
+        network.createLinks();
 
-        System.out.println("            Attacker attack the network           ");
-        System.out.println("--------------------------------------------------");
-        System.out.println("");
-
-        //Attacker.compromiseNodes(10, network);
-
-        //network.displayNodes(NodeState.compromised);
+        double ratio = ((double) (network.getTotalNumberOfSecuredLinks())) / network.getTotalNumberOfLinks();
+        System.out.println("Amount Of Secure Links / Amount of Links = " + ratio);
 
 
         //

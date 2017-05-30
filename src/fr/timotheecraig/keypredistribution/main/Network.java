@@ -19,6 +19,8 @@ public class Network {
     private ArrayList<Key> keys; // This will be replaced with the main polynomials pool later on
     private ArrayList<Link> links;
     private double density;
+    private int totalNumberOfLinks = 0;
+    private int totalNumberOfSecuredLinks = 0;
 
     // Accessors
     public String getName() {
@@ -308,4 +310,31 @@ public class Network {
         return network;
     }
 
+    public void createLinks() {
+        if(this.nodes != null) {
+            for (Node n: this.nodes){
+                ArrayList<Node> nNeighbours = n.getNeighbours();
+                if(nNeighbours != null) {
+                    for(Node node: nNeighbours) {
+                        if(!node.isVisited) { // if the neighbour of n wasn't visited
+                            this.totalNumberOfLinks++;
+                            if(!Collections.disjoint(node.getKeys(), n.getKeys())) { // and If they share a common key
+                                this.totalNumberOfSecuredLinks++;
+                                // Potentially add a real link creation here
+                            }
+                        }
+                    }
+                }
+                n.isVisited = true;
+            }
+        }
+    }
+
+    public int getTotalNumberOfLinks() {
+        return totalNumberOfLinks;
+    }
+
+    public int getTotalNumberOfSecuredLinks() {
+        return totalNumberOfSecuredLinks;
+    }
 }

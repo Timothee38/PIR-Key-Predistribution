@@ -22,6 +22,7 @@ public class Node {
     private ArrayList<Node> neighbours;
     private ArrayList<Link> links;
     private NodeState nodeState;
+    public boolean isVisited;
 
     public Node(int id, String name, Coordinates coords, int emissionRadius, List<Polynomial> keys) {
         this.id = id;
@@ -31,6 +32,11 @@ public class Node {
         this.polynomials = keys;
         this.links = new ArrayList<Link>();
         this.nodeState = NodeState.waitingForInit;
+        this.isVisited = false;
+    }
+
+    public void swicthNodeVisited() {
+        this.isVisited = !this.isVisited;
     }
 
     /**
@@ -173,4 +179,11 @@ public class Node {
     }
 
 
+    public ArrayList<Node> getNeighbours() {
+        return this.neighbours;
+    }
+
+    public List<Key> getKeys() {
+        return keys;
+    }
 }
