@@ -1,5 +1,6 @@
 package fr.timotheecraig.keypredistribution.main;
 
+import fr.timotheecraig.keypredistribution.enums.NodeState;
 import fr.timotheecraig.keypredistribution.util.Key;
 import fr.timotheecraig.keypredistribution.util.Coordinates;
 import fr.timotheecraig.keypredistribution.util.Polynomial;
@@ -18,6 +19,8 @@ public class Node {
     private int emissionRadius; // max radius to which the node can find its neighbours
     private List<Polynomial> polynomials;
     private ArrayList<Node> neighbours;
+    private ArrayList<Link> links;
+    private NodeState nodeState;
 
     public Node(int id, String name, Coordinates coords, int emissionRadius, List<Polynomial> keys) {
         this.id = id;
@@ -25,6 +28,8 @@ public class Node {
         this.coordinates = coords;
         this.emissionRadius = emissionRadius;
         this.polynomials = keys;
+        this.links = new ArrayList<Link>();
+        this.nodeState = NodeState.waitingForInit;
     }
 
     /**
@@ -128,7 +133,9 @@ public class Node {
     public String toString() {
         int neighbourSize = this.neighbours != null ? this.neighbours.size() : 0;
         int polynomialPoolSize = this.polynomials != null ? this.polynomials.size() : 0;
-        return this.name + " : " + this.coordinates + ", radius: " + this.emissionRadius + "m, " + neighbourSize + " neighbours, " + polynomialPoolSize + " polynomials.";
+        int linksSize = this.links != null ? this.links.size() : 0;
+        return this.name + " : " + this.coordinates + ", radius: " + this.emissionRadius + "m, "
+                + neighbourSize + " neighbours, " + polynomialPoolSize + " polynomials, " + linksSize + " links, state : " + this.nodeState;
     }
 
 
@@ -139,11 +146,23 @@ public class Node {
                 // check if node contains a value from this.polynomials.getIds -> todo method
                 for (Polynomial pol : this.polynomials) {
                     if (node.getPolynomials().contains(pol)) { // If the neighbours polynomials array contains a polynomial of the node
-                        links.add(new Link(this, node, pol));
+                        Link link = new Link(this, node, pol);
+                        if(!links.contains(link)) {
+                            links.add(link);
+                            this.links.add(link);
+                        }
                     }
                 }
             }
         }
         return links;
+    }
+
+    public void setState(NodeState state) {
+        this.nodeState = state;
+    }
+
+    public NodeState getState() {
+        return this.nodeState;
     }
 }

@@ -1,10 +1,8 @@
 package fr.timotheecraig.keypredistribution;
 
+import fr.timotheecraig.keypredistribution.enums.NodeState;
+import fr.timotheecraig.keypredistribution.external.Attacker;
 import fr.timotheecraig.keypredistribution.main.Network;
-import fr.timotheecraig.keypredistribution.main.Node;
-import fr.timotheecraig.keypredistribution.util.Key;
-
-import java.util.ArrayList;
 
 /**
  * Created by Timothee on 11/04/2017.
@@ -12,9 +10,7 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-        /* TODO: Generate a network of nodes, predestribute polynomials, Compare them from node to node
-           generate keys accordingly
-        */
+
         System.out.println("Key Predistribution Simulation - By Timothée Craig");
         System.out.println("--------------------------------------------------");
 
@@ -37,6 +33,8 @@ public class Main {
         System.out.println("--------------------------------------------------");
         network.predistributePolynomials(5);
 
+        network.setNodesInitialised();
+
         //network.getNodes().forEach(Node::displayPolynomials);
 
         // network.displayKeys(); // Keys are random atm, better make it less random sometime
@@ -48,8 +46,14 @@ public class Main {
         System.out.println("                    Creating paths                ");
         System.out.println("--------------------------------------------------");
         network.createPaths();
-        network.displayLinks();
+        //network.displayLinks();
+        network.displayNodes();
 
+        System.out.println("            Attacker attack the network           ");
+        System.out.println("--------------------------------------------------");
+        Attacker.compromiseNodes(10, network);
+
+        network.displayNodes(NodeState.compromised);
     }
 
 }

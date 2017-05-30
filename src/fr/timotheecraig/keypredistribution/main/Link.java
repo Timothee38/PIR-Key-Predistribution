@@ -1,7 +1,7 @@
 package fr.timotheecraig.keypredistribution.main;
 
 import fr.timotheecraig.keypredistribution.util.Polynomial;
-import fr.timotheecraig.keypredistribution.util.State;
+import fr.timotheecraig.keypredistribution.enums.State;
 
 /**
  * Created by timothee on 30/05/17.
@@ -28,6 +28,14 @@ public class Link {
      */
     public Link(Node node1, Node node2, Polynomial polynomial) {
         this(node1, node2, polynomial, State.up);
+    }
+
+    /**
+     * Set link state to a new one.
+     * @param linkState the link state
+     */
+    public void setLinkState(State linkState) {
+        this.linkState = linkState;
     }
 
     @Override
