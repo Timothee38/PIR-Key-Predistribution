@@ -18,6 +18,7 @@ public class Network {
     private ArrayList<Polynomial> mainPolynomialsPool;
     private ArrayList<Key> keys; // This will be replaced with the main polynomials pool later on
     private ArrayList<Link> links;
+    private double density;
 
     // Accessors
     public String getName() {
@@ -45,8 +46,6 @@ public class Network {
 
     public Network() {
         this("Default Network", null, null);
-        this.addAmountOfNodes(45);
-        this.addAmountOfNodes(5); // here for debug
     }
 
     /**
@@ -123,23 +122,21 @@ public class Network {
      *
      * @param amount amount of nodes to add
      */
-    public void addAmountOfNodes(int amount) {
+    public void addAmountOfNodes(int amount, int emissionRadius, int sizeOfGrid) {
         String nodeName = "node-";
         if (this.nodes == null) {
             this.nodes = new ArrayList<Node>();
             for (int i = 0; i < amount; i++) {
-                int randomX = ThreadLocalRandom.current().nextInt(0, 200 + 1);
-                int randomY = ThreadLocalRandom.current().nextInt(0, 200 + 1);
-                int randomEmissionRadius = ThreadLocalRandom.current().nextInt(30, 40 + 1);
-                this.nodes.add(new Node((i + 1), nodeName + (i + 1), new Coordinates(randomX, randomY), randomEmissionRadius, null));
+                int randomX = ThreadLocalRandom.current().nextInt(0, sizeOfGrid + 1);
+                int randomY = ThreadLocalRandom.current().nextInt(0, sizeOfGrid + 1);
+                this.nodes.add(new Node((i + 1), nodeName + (i + 1), new Coordinates(randomX, randomY), emissionRadius, null));
             }
         } else {
             int lastNodeId = this.nodes.get(this.nodes.size() - 1).getId();
             for (int i = lastNodeId; i < (amount + lastNodeId); i++) {
-                int randomX = ThreadLocalRandom.current().nextInt(0, 200 + 1);
-                int randomY = ThreadLocalRandom.current().nextInt(0, 200 + 1);
-                int randomEmissionRadius = ThreadLocalRandom.current().nextInt(30, 40 + 1);
-                this.nodes.add(new Node((i + 1), nodeName + (i + 1), new Coordinates(randomX, randomY), randomEmissionRadius, null));
+                int randomX = ThreadLocalRandom.current().nextInt(0, sizeOfGrid + 1);
+                int randomY = ThreadLocalRandom.current().nextInt(0, sizeOfGrid + 1);
+                this.nodes.add(new Node((i + 1), nodeName + (i + 1), new Coordinates(randomX, randomY), emissionRadius, null));
             }
         }
     }
@@ -228,6 +225,20 @@ public class Network {
 
     }
 
+
+    public void predistributeKeys(int amount) {
+        ArrayList<Key> copy = this.keys;
+        if(this.keys != null) {
+            amount = amount < copy.size() ? amount : copy.size();
+            for(Node node: this.nodes) {
+                Collections.shuffle(copy);//-> lol this doesnt work it seems
+                List<Key> subList = copy.subList(0, amount);
+                //System.out.println(subList);
+                node.distributeKeys(subList);
+            }
+        }
+    }
+
     /**
      * This method pre-distributes a set of polynomials to each node in the network.
      *
@@ -251,7 +262,7 @@ public class Network {
     @Override
     public String toString() {
         int nodesLen = this.nodes != null ? this.nodes.size() : 0;
-        int keyPoolLen = this.mainPolynomialsPool != null ? this.mainPolynomialsPool.size() : 0;
+        int keyPoolLen = this.keys != null ? this.keys.size() : 0;
         return this.name + " : " + nodesLen + " nodes, " + keyPoolLen + " keys";
     }
 
@@ -272,4 +283,29 @@ public class Network {
             }
         }
     }
+
+    /**
+     * Calculate the density of a network.
+     * @param degree the average degree
+     * @param nodeEmissionRadius the emission radius of each node
+     * @return the calculated density as an amountOfNodes/m²
+     */
+    private double calculateDensity(int degree, int nodeEmissionRadius) {
+        return degree / (Math.PI * (Math.pow(nodeEmissionRadius, 2)));
+    }
+
+    /**
+     * Get a network by its average degree, generating the proper amount of nodes from this degree.
+     * @param degree = pi**(nodeEmissionRadius²) * density
+     * @param size the size in meter of a side of the square to generate
+     * @return
+     */
+    public static Network getByDegree(int degree, int size, int nodeEmissionRadius) {
+        Network network = new Network("My WSN");
+        network.density = network.calculateDensity(degree, nodeEmissionRadius);
+        int amountOfNodesToGenerate = (int) (network.density * Math.pow(size, 2));
+        network.addAmountOfNodes(amountOfNodesToGenerate, nodeEmissionRadius, size);
+        return network;
+    }
+
 }

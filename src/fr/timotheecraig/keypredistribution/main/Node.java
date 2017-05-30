@@ -18,6 +18,7 @@ public class Node {
     private Coordinates coordinates;
     private int emissionRadius; // max radius to which the node can find its neighbours
     private List<Polynomial> polynomials;
+    private List<Key> keys;
     private ArrayList<Node> neighbours;
     private ArrayList<Link> links;
     private NodeState nodeState;
@@ -120,6 +121,10 @@ public class Node {
         }
     }
 
+    public void distributeKeys(List<Key> keys) {
+        this.keys = new ArrayList<Key>(keys);
+    }
+
     /**
      * Set the polynomials of a node
      * @param pol list of polynomials to copy
@@ -132,10 +137,11 @@ public class Node {
     @Override
     public String toString() {
         int neighbourSize = this.neighbours != null ? this.neighbours.size() : 0;
+        int keysSize = this.keys != null ? this.keys.size() : 0;
         int polynomialPoolSize = this.polynomials != null ? this.polynomials.size() : 0;
         int linksSize = this.links != null ? this.links.size() : 0;
         return this.name + " : " + this.coordinates + ", radius: " + this.emissionRadius + "m, "
-                + neighbourSize + " neighbours, " + polynomialPoolSize + " polynomials, " + linksSize + " links, state : " + this.nodeState;
+                + neighbourSize + " neighbours, " + keysSize + " keys, " + polynomialPoolSize + " polynomials, " + linksSize + " links, state : " + this.nodeState;
     }
 
 
@@ -165,4 +171,6 @@ public class Node {
     public NodeState getState() {
         return this.nodeState;
     }
+
+
 }
