@@ -36,6 +36,14 @@ public class Node {
     }
 
     /**
+     * Get a node's full name.
+     * @return name of the node
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
      * Get the radius of a node.
      * @return emissionRadius of a node.
      */
@@ -124,4 +132,18 @@ public class Node {
     }
 
 
+    public ArrayList<Link> compareNeighbours() {
+        ArrayList<Link> links = new ArrayList<Link>();
+        if(this.neighbours != null) {
+            for (Node node : this.neighbours) {
+                // check if node contains a value from this.polynomials.getIds -> todo method
+                for (Polynomial pol : this.polynomials) {
+                    if (node.getPolynomials().contains(pol)) { // If the neighbours polynomials array contains a polynomial of the node
+                        links.add(new Link(this, node, pol));
+                    }
+                }
+            }
+        }
+        return links;
+    }
 }

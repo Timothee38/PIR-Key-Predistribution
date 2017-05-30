@@ -16,6 +16,7 @@ public class Network {
     private ArrayList<Node> nodes;
     private ArrayList<Polynomial> mainPolynomialsPool;
     private ArrayList<Key> keys; // This will be replaced with the main polynomials pool later on
+    private ArrayList<Link> links;
 
     // Accessors
     public String getName() {
@@ -58,6 +59,20 @@ public class Network {
         }
         else {
             System.out.println("No nodes set for this network.");
+        }
+    }
+
+    /**
+     * Display all the links from the network.
+     */
+    public void displayLinks() {
+        if(this.links != null) {
+            for(int i = 0; i < this.links.size(); i++) {
+                System.out.println(this.links.get(i));
+            }
+        }
+        else {
+            System.out.println("No links set for this network.");
         }
     }
 
@@ -219,5 +234,15 @@ public class Network {
         int nodesLen = this.nodes != null ? this.nodes.size() : 0;
         int keyPoolLen = this.mainPolynomialsPool != null ? this.mainPolynomialsPool.size() : 0;
         return this.name + " : " + nodesLen + " nodes, " + keyPoolLen + " keys";
+    }
+
+    /**
+     * This method creates paths between nodes.
+     */
+    public void createPaths() {
+        this.links = this.links == null ? this.links = new ArrayList<Link>() : this.links;
+        for (Node node: this.nodes) {
+            this.links.addAll(node.compareNeighbours());
+        }
     }
 }

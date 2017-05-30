@@ -37,13 +37,18 @@ public class Main {
         System.out.println("--------------------------------------------------");
         network.predistributePolynomials(5);
 
-        network.getNodes().forEach(Node::displayPolynomials);
+        //network.getNodes().forEach(Node::displayPolynomials);
 
         // network.displayKeys(); // Keys are random atm, better make it less random sometime
         System.out.println("                     Deploying...                 ");
         System.out.println("         Initializing neighbour discovery         ");
         System.out.println("--------------------------------------------------");
         network.neighbourDiscovery();
+
+        System.out.println("                    Creating paths                ");
+        System.out.println("--------------------------------------------------");
+        network.createPaths();
+        network.displayLinks();
 
     }
 
