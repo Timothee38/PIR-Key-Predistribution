@@ -5,6 +5,7 @@ import fr.timotheecraig.keypredistribution.external.Attacker;
 import fr.timotheecraig.keypredistribution.main.Network;
 import fr.timotheecraig.keypredistribution.main.Node;
 
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
 
 /**
@@ -16,66 +17,78 @@ public class Main {
 
         // BASIC SCHEME
 
-        System.out.println("Key Predistribution Simulation - By Timothée Craig");
-        System.out.println("--------------------------------------------------");
-        System.out.println("");
+        try {
 
-        int degree = 4; // 4 nodes
-        int size = 1000; // 1000 meters
-        int nodeEmissionRadius = 50; // 50 meters
-        Network network = Network.getByDegree(degree, size, nodeEmissionRadius);
+            PrintWriter pr = new PrintWriter("data-collected.txt", "UTF-8");
 
-        System.out.println("        Done with network initialisation          ");
-        System.out.println("");
-        System.out.println("                Adding keys...                    ");
-        System.out.println("--------------------------------------------------");
-        System.out.println("");
+            System.out.println("Key Predistribution Simulation - By Timothée Craig");
+            System.out.println("--------------------------------------------------");
+            System.out.println("");
 
-        network.addAmountOfKeys(1000, 128);
-        System.out.println(network);
+            int degree = 4; // 4 nodes
+            int size = 1000; // 1000 meters
+            int nodeEmissionRadius = 50; // 50 meters
+            Network network = Network.getByDegree(degree, size, nodeEmissionRadius);
 
-        System.out.println("");
-        System.out.println("              Pre-Distributing keys               ");
-        System.out.println("--------------------------------------------------");
-        System.out.println("");
+            System.out.println("        Done with network initialisation          ");
+            System.out.println("");
+            System.out.println("                Adding keys...                    ");
+            System.out.println("--------------------------------------------------");
+            System.out.println("");
 
-        network.predistributeKeys(50); // 5 keys per node
-        network.setNodesInitialised();
+            network.addAmountOfKeys(1000, 128);
+            System.out.println(network);
 
-        //network.getNodes().forEach(System.out::println);
+            System.out.println("");
+            System.out.println("              Pre-Distributing keys               ");
+            System.out.println("--------------------------------------------------");
+            System.out.println("");
 
-        // network.displayKeys();
-        System.out.println("             Pre-distribution Completed           ");
-        System.out.println("");
-        System.out.println("                     Deploying...                 ");
-        System.out.println("         Initializing neighbour discovery         ");
-        System.out.println("--------------------------------------------------");
-        System.out.println("");
+            network.predistributeKeys(50); // 5 keys per node
+            network.setNodesInitialised();
 
-        network.neighbourDiscovery();
-        //network.getNodes().forEach(System.out::println);
+            //network.getNodes().forEach(System.out::println);
 
-        System.out.println("            Neighbour discovery completed         ");
-        System.out.println("");
-        System.out.println("                  Creating paths                  ");
-        System.out.println("--------------------------------------------------");
-        System.out.println("");
+            // network.displayKeys();
+            System.out.println("             Pre-distribution Completed           ");
+            System.out.println("");
+            System.out.println("                     Deploying...                 ");
+            System.out.println("         Initializing neighbour discovery         ");
+            System.out.println("--------------------------------------------------");
+            System.out.println("");
 
-        network.createLinks();
+            network.neighbourDiscovery();
+            //network.getNodes().forEach(System.out::println);
 
-        double ratio = ((double) (network.getTotalNumberOfSecuredLinks())) / network.getTotalNumberOfLinks();
-        System.out.println("Amount Of Secure Links / Amount of Links = " + ratio);
+            System.out.println("            Neighbour discovery completed         ");
+            System.out.println("");
+            System.out.println("                  Creating paths                  ");
+            System.out.println("--------------------------------------------------");
+            System.out.println("");
 
-        int amountOfLinks = network.getLinks() != null ? network.getLinks().size() : 0;
-        System.out.println("Amount of links created " + amountOfLinks);
+            network.createLinks();
 
-        System.out.println("");
-        System.out.println("            Attacker attack the network           ");
-        System.out.println("--------------------------------------------------");
-        System.out.println("");
+            double ratio = ((double) (network.getTotalNumberOfSecuredLinks())) / network.getTotalNumberOfLinks();
+            System.out.println("Amount Of Secure Links / Amount of Links = " + ratio);
 
-        int amountOfCompromisedLinks = Attacker.compromiseNetwork_Basic_Scheme(1, network);
-        System.out.println("Amount of compromised links : " + amountOfCompromisedLinks);
+            int amountOfLinks = network.getLinks() != null ? network.getLinks().size() : 0;
+            System.out.println("Amount of links created " + amountOfLinks);
+
+            System.out.println("");
+            System.out.println("            Attacker attack the network           ");
+            System.out.println("--------------------------------------------------");
+            System.out.println("");
+
+            int amountOfCompromisedLinks = Attacker.compromiseNetwork_Basic_Scheme(1, network);
+            System.out.println("Amount of compromised links : " + amountOfCompromisedLinks);
+
+
+
+            pr.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //
         //
         //
