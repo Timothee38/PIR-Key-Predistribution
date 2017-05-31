@@ -150,12 +150,14 @@ public class Node {
                 + neighbourSize + " neighbours, " + keysSize + " keys, " + polynomialPoolSize + " polynomials, " + linksSize + " links, state : " + this.nodeState;
     }
 
-
+    /**
+     * Check if the node has common polynomials with it's neighbours.
+     * @return a list of created links if the nodes share a common polynomial
+     */
     public ArrayList<Link> compareNeighbours() {
         ArrayList<Link> links = new ArrayList<Link>();
         if(this.neighbours != null) {
             for (Node node : this.neighbours) {
-                // check if node contains a value from this.polynomials.getIds -> todo method
                 for (Polynomial pol : this.polynomials) {
                     if (node.getPolynomials().contains(pol)) { // If the neighbours polynomials array contains a polynomial of the node
                         Link link = new Link(this, node, pol);

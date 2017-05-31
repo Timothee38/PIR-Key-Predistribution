@@ -1,5 +1,6 @@
 package fr.timotheecraig.keypredistribution.main;
 
+import fr.timotheecraig.keypredistribution.enums.NetworkType;
 import fr.timotheecraig.keypredistribution.enums.NodeState;
 import fr.timotheecraig.keypredistribution.util.Coordinates;
 import fr.timotheecraig.keypredistribution.util.Key;
@@ -18,6 +19,7 @@ public class Network {
     private ArrayList<Polynomial> mainPolynomialsPool;
     private ArrayList<Key> keys; // This will be replaced with the main polynomials pool later on
     private ArrayList<Link> links;
+    private NetworkType scheme;
     private double density;
     private int totalNumberOfLinks = 0;
     private int totalNumberOfSecuredLinks = 0;
@@ -307,6 +309,7 @@ public class Network {
         network.density = network.calculateDensity(degree, nodeEmissionRadius);
         int amountOfNodesToGenerate = (int) (network.density * Math.pow(size, 2));
         network.addAmountOfNodes(amountOfNodesToGenerate, nodeEmissionRadius, size);
+        network.scheme = NetworkType.basicScheme;
         return network;
     }
 

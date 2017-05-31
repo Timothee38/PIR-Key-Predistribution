@@ -29,7 +29,7 @@ public class Main {
         System.out.println("--------------------------------------------------");
         System.out.println("");
 
-        network.addAmountOfKeys(1000, 2048);
+        network.addAmountOfKeys(1000, 128);
         System.out.println(network);
 
         System.out.println("");
@@ -37,7 +37,7 @@ public class Main {
         System.out.println("--------------------------------------------------");
         System.out.println("");
 
-        network.predistributeKeys(5); // 5 keys per node
+        network.predistributeKeys(50); // 5 keys per node
         network.setNodesInitialised();
 
         //network.getNodes().forEach(System.out::println);

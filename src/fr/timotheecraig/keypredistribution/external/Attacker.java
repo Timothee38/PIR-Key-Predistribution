@@ -12,25 +12,16 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Attacker {
 
-    public static void compromiseNodes(int t, Network n) {
-        ArrayList<Node> networkNodes = n.getNodes();
-        if(networkNodes != null) {
-            System.out.println("Randomly compromising " + t + " nodes...");
-            int randomIndex = 0;
-            ArrayList<Integer> alreadyCompromisedIndex = new ArrayList<Integer>();
-            for (int i = 0; i < t; i++) {
-                // Pick a random index and compromise the node at the given index
-                while (alreadyCompromisedIndex.contains(randomIndex)) {
-                    randomIndex = ThreadLocalRandom.current().nextInt(0, networkNodes.size());
-                }
-                alreadyCompromisedIndex.add(randomIndex);
+    /**
+     * Compromise t nodes on the network and compromised the links attached to the keys from each node.
+     * This function only works on a network following the basic scheme.
+     * @param t amount of nodes to compromise
+     * @param n the network
+     */
+    public static void compromiseNetwork_Basic_Scheme(int t, Network n) {
 
-                Node nodeToCompromise = networkNodes.get(randomIndex);
-
-                nodeToCompromise.setState(NodeState.compromised);
-
-            }
-        }
     }
+
+
 
 }
