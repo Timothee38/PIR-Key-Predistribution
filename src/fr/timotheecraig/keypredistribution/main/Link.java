@@ -51,6 +51,10 @@ public class Link {
         this.linkState = linkState;
     }
 
+    public Key getKey() {
+        return key;
+    }
+
     @Override
     public String toString() {
         return node1.getName() + " - " + node2.getName() + " : " + this.linkState.name();

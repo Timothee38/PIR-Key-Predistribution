@@ -5,6 +5,8 @@ import fr.timotheecraig.keypredistribution.external.Attacker;
 import fr.timotheecraig.keypredistribution.main.Network;
 import fr.timotheecraig.keypredistribution.main.Node;
 
+import java.lang.reflect.Array;
+
 /**
  * Created by Timothee on 11/04/2017.
  */
@@ -64,7 +66,16 @@ public class Main {
         double ratio = ((double) (network.getTotalNumberOfSecuredLinks())) / network.getTotalNumberOfLinks();
         System.out.println("Amount Of Secure Links / Amount of Links = " + ratio);
 
+        int amountOfLinks = network.getLinks() != null ? network.getLinks().size() : 0;
+        System.out.println("Amount of links created " + amountOfLinks);
 
+        System.out.println("");
+        System.out.println("            Attacker attack the network           ");
+        System.out.println("--------------------------------------------------");
+        System.out.println("");
+
+        int amountOfCompromisedLinks = Attacker.compromiseNetwork_Basic_Scheme(1, network);
+        System.out.println("Amount of compromised links : " + amountOfCompromisedLinks);
         //
         //
         //

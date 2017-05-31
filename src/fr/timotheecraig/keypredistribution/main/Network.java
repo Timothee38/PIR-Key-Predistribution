@@ -33,8 +33,16 @@ public class Network {
         return nodes;
     }
 
+    public NetworkType getScheme() {
+        return scheme;
+    }
+
     public ArrayList<Polynomial> getMainPolynomialsPool() {
         return mainPolynomialsPool;
+    }
+
+    public ArrayList<Link> getLinks() {
+        return links;
     }
 
     // Constructors
@@ -321,9 +329,16 @@ public class Network {
                     for(Node node: nNeighbours) {
                         if(!node.isVisited) { // if the neighbour of n wasn't visited
                             this.totalNumberOfLinks++;
-                            if(!Collections.disjoint(node.getKeys(), n.getKeys())) { // and If they share a common key
+                            this.links = this.links == null ? new ArrayList<Link>() : this.links;
+                            // perform temporary copies
+                            ArrayList<Key> neighbourKeys = new ArrayList<Key>(node.getKeys());
+                            ArrayList<Key> nodeKeys = new ArrayList<Key>(n.getKeys());
+                            // Get common elements between both lists
+                            nodeKeys.retainAll(neighbourKeys);
+                            if(nodeKeys.size() > 0) { // If they share a common key
                                 this.totalNumberOfSecuredLinks++;
-                                // Potentially add a real link creation here
+                                // TODO here: add a link creation
+                                this.links.add(new Link(node, n, nodeKeys.get(0)));
                             }
                         }
                     }
