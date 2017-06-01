@@ -48,7 +48,6 @@ public class Attacker {
                 // Compromise links with the gathered keys
                 ArrayList<Link> networkLinks = n.getLinks();
                 if(networkLinks != null) {
-                    System.out.println(networkLinks.size());
                     ArrayList<Link> linksToCompromise = new ArrayList<Link>();
                     // Get a list of links to compromise
                     for (Link l: networkLinks) {
@@ -78,6 +77,18 @@ public class Attacker {
         return amountOfLinksCompromised;
     }
 
-
-
+    /**
+     * This method uncompromises the network (for testing purposes)
+     * @param network the network to uncompromise
+     */
+    public static void uncompromiseNodes(Network network) {
+        if(network != null) {
+            for (Node n: network.getNodes()) {
+                n.setState(NodeState.deployed);
+            }
+            for (Link l: network.getLinks()) {
+                l.setLinkLinkState(LinkState.up);
+            }
+        }
+    }
 }

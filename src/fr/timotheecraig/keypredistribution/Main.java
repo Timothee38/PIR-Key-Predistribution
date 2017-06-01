@@ -21,13 +21,18 @@ public class Main {
 
             PrintWriter pr = new PrintWriter("data-collected.txt", "UTF-8");
 
+            int keysPerNode = 20;
+            int amountOfKeys = 1000;
+            int sizeOfKey = 128;
+            int amountOfNodesToCompromise = 15;
+            int degree = 4; // 4 nodes
+            int size = 1000; // 1000 meters
+            int nodeEmissionRadius = 50; // 50 meters
+
             System.out.println("Key Predistribution Simulation - By Timothée Craig");
             System.out.println("--------------------------------------------------");
             System.out.println("");
 
-            int degree = 4; // 4 nodes
-            int size = 1000; // 1000 meters
-            int nodeEmissionRadius = 50; // 50 meters
             Network network = Network.getByDegree(degree, size, nodeEmissionRadius);
 
             System.out.println("        Done with network initialisation          ");
@@ -36,7 +41,7 @@ public class Main {
             System.out.println("--------------------------------------------------");
             System.out.println("");
 
-            network.addAmountOfKeys(1000, 128);
+            network.addAmountOfKeys(amountOfKeys, sizeOfKey);
             System.out.println(network);
 
             System.out.println("");
@@ -44,7 +49,7 @@ public class Main {
             System.out.println("--------------------------------------------------");
             System.out.println("");
 
-            network.predistributeKeys(50); // 5 keys per node
+            network.predistributeKeys(keysPerNode); // 5 keys per node
             network.setNodesInitialised();
 
             //network.getNodes().forEach(System.out::println);
@@ -72,17 +77,31 @@ public class Main {
             System.out.println("Amount Of Secure Links / Amount of Links = " + ratio);
 
             int amountOfLinks = network.getLinks() != null ? network.getLinks().size() : 0;
-            System.out.println("Amount of links created " + amountOfLinks);
+            System.out.println("Amount of links created: " + amountOfLinks);
+
+            /*int maxAmountOfNodes = network.getNodes().size();
+            int t = 1;
+            while(t < maxAmountOfNodes) {*/
 
             System.out.println("");
             System.out.println("            Attacker attack the network           ");
             System.out.println("--------------------------------------------------");
             System.out.println("");
 
-            int amountOfCompromisedLinks = Attacker.compromiseNetwork_Basic_Scheme(1, network);
-            System.out.println("Amount of compromised links : " + amountOfCompromisedLinks);
+            int amountOfCompromisedLinks = Attacker.compromiseNetwork_Basic_Scheme(amountOfNodesToCompromise, network);
 
+            System.out.println("Resilience for "+ amountOfNodesToCompromise +" nodes compromised, with "
+                    + keysPerNode + " keys each : " + ((double) amountOfCompromisedLinks / amountOfLinks));
 
+            // The generated graph will look bad here because of the randomness in choosing node to corrupt
+            // Potentially we could make it less random, in order to have a nicer graph. (giving the attacker the indexes
+            // of the nodes to corrupt.
+            //pr.println(t+";"+((double)amountOfCompromisedLinks/amountOfLinks));
+
+            //Attacker.uncompromiseNodes(network);
+
+            //t++;
+            //}
 
             pr.close();
 
