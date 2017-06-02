@@ -216,28 +216,17 @@ public class Network {
         if (this.mainPolynomialsPool == null) {
             this.mainPolynomialsPool = new ArrayList<Polynomial>();
             for (int i = 0; i < amount; i++) {
-                int polynomialSize = (int) (Math.random() * maxPolynomialOrder + 1);
-                int coefs[] = new int[polynomialSize];
-                for (int j = 0; j < polynomialSize; j++) {
-                    coefs[j] = ThreadLocalRandom.current().nextInt(-biggestCoef, biggestCoef + 1);
-                }
-                this.mainPolynomialsPool.add(new Polynomial(i + 1, coefs));
-            }
-        } else {
-            int lastPolynomialId = this.mainPolynomialsPool.get(this.mainPolynomialsPool.size() - 1).getIdentifier();
-            for (int i = lastPolynomialId; i < (lastPolynomialId + amount); i++) {
-                int polynomialSize = (int) (Math.random() * maxPolynomialOrder + 1);
-                int coefs[] = new int[polynomialSize];
-                for (int j = 0; j < polynomialSize; j++) {
-                    coefs[j] = ThreadLocalRandom.current().nextInt(-biggestCoef, biggestCoef + 1);
-                }
-                this.mainPolynomialsPool.add(new Polynomial(i + 1, coefs));
+                int randomPolynomialOrder = ThreadLocalRandom.current().nextInt(2, maxPolynomialOrder + 1);
+                this.mainPolynomialsPool.add(Polynomial.generatePolynomial(i, randomPolynomialOrder, biggestCoef));
             }
         }
 
     }
 
-
+    /**
+     * Predistribute a certain amount of keys to each node in the network.
+     * @param amount the amount of keys per node
+     */
     public void predistributeKeys(int amount) {
         ArrayList<Key> copy = this.keys;
         if(this.keys != null) {
@@ -257,15 +246,15 @@ public class Network {
      * @param amountOfPolynomialsToDistribute This is the amount of polynomials to distribute per node.
      */
     public void predistributePolynomials(int amountOfPolynomialsToDistribute) {
-        ArrayList<Polynomial> copy = this.mainPolynomialsPool;
-        if (this.mainPolynomialsPool != null) {
-            amountOfPolynomialsToDistribute =
-                    amountOfPolynomialsToDistribute <= this.mainPolynomialsPool.size() ?
-                            amountOfPolynomialsToDistribute : this.mainPolynomialsPool.size();
-            for (Node node : this.nodes) {
-                Collections.shuffle(copy);//-> lol this doesnt work it seems
+        ArrayList<Polynomial> copy = new ArrayList<>(this.mainPolynomialsPool);
+        if(this.mainPolynomialsPool != null) {
+            amountOfPolynomialsToDistribute = amountOfPolynomialsToDistribute < copy.size() ? amountOfPolynomialsToDistribute : copy.size();
+            for (Node node: this.nodes) {
+                Collections.shuffle(copy);
                 List<Polynomial> subList = copy.subList(0, amountOfPolynomialsToDistribute);
-                //System.out.println(subList);
+                for(Polynomial p: subList) {
+                    p.applyIdToCoefs(node.getId());
+                }
                 node.distributePolynomials(subList);
             }
         }
@@ -312,12 +301,12 @@ public class Network {
      * @param size the size in meter of a side of the square to generate
      * @return
      */
-    public static Network getByDegree(int degree, int size, int nodeEmissionRadius) {
+    public static Network getByDegree(int degree, int size, int nodeEmissionRadius, NetworkType scheme) {
         Network network = new Network("My WSN");
         network.density = network.calculateDensity(degree, nodeEmissionRadius);
         int amountOfNodesToGenerate = (int) (network.density * Math.pow(size, 2));
         network.addAmountOfNodes(amountOfNodesToGenerate, nodeEmissionRadius, size);
-        network.scheme = NetworkType.basicScheme;
+        network.scheme = scheme;
         return network;
     }
 
