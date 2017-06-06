@@ -174,6 +174,9 @@ public class Main {
         double ratio = ((double) (network.getTotalNumberOfSecuredLinks())) / network.getTotalNumberOfLinks();
         System.out.println("Amount Of Secure Links / Amount of Links = " + ratio);
 
+        int amountOfLinks = network.getLinks() != null ? network.getLinks().size() : 0;
+        System.out.println("Amount of links created: " + amountOfLinks);
+
 //        pr.println(ratio);
         //network.displayLinks();
         //network.displayNodes();
@@ -183,7 +186,9 @@ public class Main {
         System.out.println("--------------------------------------------------");
         System.out.println();
 
-
+        int amountOfCompromisedLinks = Attacker.compromiseNetwork_Polynomial_Scheme(5, network);
+        System.out.println("Resilience for "+ 5 +" nodes compromised, with "
+                + keysPerNode + " keys each : " + ((double) amountOfCompromisedLinks / amountOfLinks));
         //Attacker.compromiseNodes(10, network);
         //network.displayNodes(NodeState.compromised);
 //                m++;

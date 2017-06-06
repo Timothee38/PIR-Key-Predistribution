@@ -377,8 +377,10 @@ public class Network {
 
                                 Integer commonId = Polynomial.getCommonId(nodePolynomials, neighbourPolynomials);
                                 if(commonId != -1) {
-                                    int nodeComputedValue = nodePolynomials.get(commonId).computeValue(neighbour.getId());
-                                    int neighbourComputedValue = neighbourPolynomials.get(commonId).computeValue(n.getId());
+                                    Polynomial nodePol = nodePolynomials.get(commonId);
+                                    Polynomial neighbourPol = neighbourPolynomials.get(commonId);
+                                    int nodeComputedValue = nodePol.computeValue(neighbour.getId());
+                                    int neighbourComputedValue = neighbourPol.computeValue(n.getId());
                                     if(nodeComputedValue == neighbourComputedValue) {
                                         this.totalNumberOfSecuredLinks++;
                                         this.links.add(new Link(n, neighbour, Key.createKeyFromPolynomial(nodeComputedValue)));

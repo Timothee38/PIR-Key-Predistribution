@@ -7,8 +7,10 @@ import fr.timotheecraig.keypredistribution.main.Link;
 import fr.timotheecraig.keypredistribution.main.Network;
 import fr.timotheecraig.keypredistribution.main.Node;
 import fr.timotheecraig.keypredistribution.util.Key;
+import fr.timotheecraig.keypredistribution.util.Polynomial;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -85,12 +87,54 @@ public class Attacker {
         if(n.getScheme() == NetworkType.polynomialScheme) {
             if(n.getNodes() != null) {
                 ArrayList<Key> generatedKeysFromStolenPolynomials = new ArrayList<Key>();
-                for(Node node: n.getNodes()) {
-                    // Todo here: generate keys from node polynomials with it's neighbours and append it to the array list
+                ArrayList<Node> nodesToCompromise = new ArrayList<Node>();
 
+                t = t > n.getNodes().size() ? n.getNodes().size() : t;
+                // Retrieve t "random" nodes from n
+                for(int i = 0; i < t; i++) {
+                    nodesToCompromise.add(n.getNodes().get(i));
+                }
+
+                // Generate keys from nodesToCompromise
+                if(nodesToCompromise != null) {
+                    for (Node node : nodesToCompromise) {
+                        ArrayList<Node> nNeighbours = node.getNeighbours();
+                        if(nNeighbours != null) {
+                            for (Node neighbour : nNeighbours) {
+                                HashMap<Integer, Polynomial>  neighbourPolynomials = new HashMap<Integer, Polynomial>(neighbour.getPolynomials());
+                                HashMap<Integer, Polynomial>  nodePolynomials = new HashMap<Integer, Polynomial>(node.getPolynomials());
+
+                                Integer commonId = Polynomial.getCommonId(nodePolynomials, neighbourPolynomials);
+                                if(commonId != -1) {
+                                    // make a copy ?
+                                    Polynomial nodePol = nodePolynomials.get(commonId);
+                                    Polynomial neighbourPol = neighbourPolynomials.get(commonId);
+                                    int nodeComputedValue = nodePol.computeValue(neighbour.getId());
+                                    int neighbourComputedValue = neighbourPol.computeValue(node.getId());
+                                    if(nodeComputedValue == neighbourComputedValue) {
+                                        Key genKey = Key.createKeyFromPolynomial(nodeComputedValue);
+                                        System.out.println(genKey);
+                                        generatedKeysFromStolenPolynomials.add(genKey);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 // Todo here: compromise links with the key array
+
+                if (n.getLinks() != null) {
+                   for(Link l: n.getLinks()) {
+                       if(generatedKeysFromStolenPolynomials.contains(l.getKey())) {
+                           l.setLinkLinkState(LinkState.compromised);
+                           amountOfLinksCompromised++;
+                       }
+                   }
+                }
+                else {
+                    System.out.println("No links in the network \"" + n + "\"");
+                }
 
             }
             else {
