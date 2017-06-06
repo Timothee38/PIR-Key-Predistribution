@@ -1,8 +1,8 @@
 package fr.timotheecraig.keypredistribution.util;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -23,7 +23,7 @@ public class Polynomial {
 
     public Polynomial(int[] coefs) {
         this.coefs = coefs;
-        int randomMultiplier = ThreadLocalRandom.current().nextInt(1, 9 + 1); // Random int in [1;20]
+        int randomMultiplier = ThreadLocalRandom.current().nextInt(1, 9 + 1); // Random int in [1;9]
         this.module = randomMultiplier * (int) Math.pow(2, 8);
     }
 
@@ -40,9 +40,9 @@ public class Polynomial {
      */
     public void applyIdToCoefs(int id) {
         if(this.coefs != null) {
-            for(int i = 1; i < this.coefs.length; i++) {
-                double computedValue = (this.coefs[i]*Math.pow(id, i));
-                this.coefs[i] = (int) (computedValue) % this.module;
+            for(int i = 0; i < this.coefs.length; i++) {
+                int computedValue = (int) (this.coefs[i]*Math.pow(id, i));
+                this.coefs[i] = computedValue;
             }
         }
     }
@@ -53,12 +53,30 @@ public class Polynomial {
         int[] coefs = new int[maxPolynomialOrder + 1]; // example : order = 2 : 3 coefs
         for(int i = 0; i <= maxPolynomialOrder; i++) {
             int randomCoef = ThreadLocalRandom.current().nextInt(-biggestCoef, biggestCoef + 1);
-            if(randomCoef == 0) {
-                randomCoef = 1;
-            }
+
             coefs[i] = randomCoef;
         }
         return new Polynomial(coefs);
     }
 
+    public static Integer getCommonId(HashMap<Integer, Polynomial> nodePolynomials, HashMap<Integer, Polynomial> neighbourPolynomials) {
+        if (nodePolynomials != null && neighbourPolynomials != null) {
+            for (Integer key : nodePolynomials.keySet()) {
+                if(neighbourPolynomials.containsKey(key)) {
+                    return key;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public int computeValue(int id) {
+        int ret = 0;
+        if(this.coefs != null) {
+            for(int i = 0; i < this.coefs.length; i++) {
+                ret += (this.coefs[i] * Math.pow(id, i));
+            }
+        }
+        return ret % this.module;
+    }
 }

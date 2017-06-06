@@ -173,23 +173,6 @@ public class Node {
         this.polynomials = new HashMap<Integer, Polynomial>(pol);
     }
 
-    /**
-     * Check if the node has common polynomials with it's neighbours.
-     * @return a list of created links if the nodes share a common polynomial
-     */
-    public ArrayList<Link> compareNeighbours_polynomials() {
-        // Remove this method someday, will use network.createLinks_polynomials()
-        ArrayList<Link> links = new ArrayList<Link>();
-        if(this.neighbours != null) {
-            for(Node neighbour : this.neighbours) {
-                int neighbourId = neighbour.getId(); // -> will be used to try the polynomials
-                HashMap<Integer, Polynomial> neighboursPolynomials = neighbour.getPolynomials();
-
-            }
-        }
-        return links;
-    }
-
     @Override
     public String toString() {
         int neighbourSize = this.neighbours != null ? this.neighbours.size() : 0;

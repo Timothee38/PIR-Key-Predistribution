@@ -274,9 +274,9 @@ public class Network {
                     int myKey = subList.get(i);
                     polyToDistrib.put(myKey, this.mainPolynomialsPool.get(myKey));
                 }
-                /*for(Polynomial p: subList) {
-                    p.applyIdToCoefs(node.getId());
-                }*/
+                for(Integer key: polyToDistrib.keySet()) {
+                    polyToDistrib.get(key).applyIdToCoefs(node.getId());
+                }
                 node.distributePolynomials(polyToDistrib);
             }
         }
@@ -353,6 +353,7 @@ public class Network {
     }
 
     public void createLinks_polynomials() {
+        this.links = this.links == null ? new ArrayList<Link>() : this.links;
         if(this.scheme == NetworkType.polynomialScheme) {
             if(this.nodes != null) {
                 for(Node n : this.nodes) {
@@ -361,6 +362,7 @@ public class Network {
                         for (Node neighbour: nNeighbours) {
                             if(!neighbour.isVisited) {
                                 this.totalNumberOfLinks++;
+
                                 HashMap<Integer, Polynomial>  neighbourPolynomials = new HashMap<Integer, Polynomial>(neighbour.getPolynomials());
                                 HashMap<Integer, Polynomial>  nodePolynomials = new HashMap<Integer, Polynomial>(n.getPolynomials());
 
@@ -373,11 +375,18 @@ public class Network {
                                 // => 1 + 2*2 + 3*2² = 1 + 4*1 + 12*1²
                                 // create a key for the link from the polynomial -> From the computed result
 
-                                //ArrayList<Polynomial> commonPolynomials = Polynomial.comparePolynomialsArray(nodePolynomials, neighbourPolynomials);
-
-
+                                Integer commonId = Polynomial.getCommonId(nodePolynomials, neighbourPolynomials);
+                                if(commonId != -1) {
+                                    int nodeComputedValue = nodePolynomials.get(commonId).computeValue(neighbour.getId());
+                                    int neighbourComputedValue = neighbourPolynomials.get(commonId).computeValue(n.getId());
+                                    if(nodeComputedValue == neighbourComputedValue) {
+                                        this.totalNumberOfSecuredLinks++;
+                                        this.links.add(new Link(n, neighbour, Key.createKeyFromPolynomial(nodeComputedValue)));
+                                    }
+                                }
                             }
                         }
+                        n.isVisited = true;
                     }
                 }
             }
