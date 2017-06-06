@@ -86,7 +86,7 @@ public class Attacker {
 
         if(n.getScheme() == NetworkType.polynomialScheme) {
             if(n.getNodes() != null) {
-                ArrayList<Key> generatedKeysFromStolenPolynomials = new ArrayList<Key>();
+                ArrayList<String> generatedKeysFromStolenPolynomials = new ArrayList<String>();
                 ArrayList<Node> nodesToCompromise = new ArrayList<Node>();
 
                 t = t > n.getNodes().size() ? n.getNodes().size() : t;
@@ -107,14 +107,13 @@ public class Attacker {
                                 Integer commonId = Polynomial.getCommonId(nodePolynomials, neighbourPolynomials);
                                 if(commonId != -1) {
                                     // make a copy ?
-                                    Polynomial nodePol = nodePolynomials.get(commonId);
-                                    Polynomial neighbourPol = neighbourPolynomials.get(commonId);
+                                    Polynomial nodePol = new Polynomial(nodePolynomials.get(commonId));
+                                    Polynomial neighbourPol = new Polynomial(neighbourPolynomials.get(commonId));
                                     int nodeComputedValue = nodePol.computeValue(neighbour.getId());
                                     int neighbourComputedValue = neighbourPol.computeValue(node.getId());
                                     if(nodeComputedValue == neighbourComputedValue) {
                                         Key genKey = Key.createKeyFromPolynomial(nodeComputedValue);
-                                        System.out.println(genKey);
-                                        generatedKeysFromStolenPolynomials.add(genKey);
+                                        generatedKeysFromStolenPolynomials.add(genKey.getKeyString());
                                     }
                                 }
                             }
@@ -122,12 +121,9 @@ public class Attacker {
                     }
                 }
 
-                // Todo here: compromise links with the key array
-
                 if (n.getLinks() != null) {
                    for(Link l: n.getLinks()) {
-                       if(generatedKeysFromStolenPolynomials.contains(l.getKey())) {
-                           l.setLinkLinkState(LinkState.compromised);
+                       if(generatedKeysFromStolenPolynomials.contains(l.getKey().getKeyString())) {
                            amountOfLinksCompromised++;
                        }
                    }

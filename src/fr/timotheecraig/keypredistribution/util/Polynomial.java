@@ -13,6 +13,11 @@ public class Polynomial {
     private int[] coefs; // [a, b, c...n] => a + b*x*y + c*x²y²+...+n*(x^n)*(y^n)
     private int module;
 
+    public Polynomial(Polynomial polynomial) {
+        this.coefs = polynomial.coefs;
+        this.module = polynomial.module;
+    }
+
     /**
      * Get the coefficients of a polynomial : [a, b, c...n] | a + b*x*y + c*x²y²+...+n*(x^n)*(y^n)
      * @return the coefs of a polynomial

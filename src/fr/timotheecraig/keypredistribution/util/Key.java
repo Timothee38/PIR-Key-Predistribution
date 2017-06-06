@@ -13,6 +13,10 @@ public class Key {
         this.keyString = keyString;
     }
 
+    public String getKeyString() {
+        return keyString;
+    }
+
     /**
      * Generate a random key composed of random characters.
      * @param sizeOfKey the amount of random characters

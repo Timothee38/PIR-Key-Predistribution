@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        int keysPerNode = 20;
+        int keysPerNode = 5;
         int amountOfKeys = 1000;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;
@@ -151,7 +151,7 @@ public class Main {
         System.out.println("--------------------------------------------------");
         System.out.println();
 
-        network.predistributePolynomials(20);
+        network.predistributePolynomials(keysPerNode);
         network.setNodesInitialised();
 
         //network.getNodes().forEach(Node::displayPolynomials);
@@ -175,7 +175,7 @@ public class Main {
         System.out.println("Amount Of Secure Links / Amount of Links = " + ratio);
 
         int amountOfLinks = network.getLinks() != null ? network.getLinks().size() : 0;
-        System.out.println("Amount of links created: " + amountOfLinks);
+        System.out.println("Amount of links created: " + amountOfLinks + ", Total amount of links : " + network.getTotalNumberOfLinks());
 
 //        pr.println(ratio);
         //network.displayLinks();
@@ -188,7 +188,7 @@ public class Main {
 
         int amountOfCompromisedLinks = Attacker.compromiseNetwork_Polynomial_Scheme(5, network);
         System.out.println("Resilience for "+ 5 +" nodes compromised, with "
-                + keysPerNode + " keys each : " + ((double) amountOfCompromisedLinks / amountOfLinks));
+                + keysPerNode + " polynomials each : " + ((double) amountOfCompromisedLinks / amountOfLinks));
         //Attacker.compromiseNodes(10, network);
         //network.displayNodes(NodeState.compromised);
 //                m++;

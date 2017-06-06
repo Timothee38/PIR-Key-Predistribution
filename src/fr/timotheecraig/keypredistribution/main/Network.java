@@ -377,8 +377,8 @@ public class Network {
 
                                 Integer commonId = Polynomial.getCommonId(nodePolynomials, neighbourPolynomials);
                                 if(commonId != -1) {
-                                    Polynomial nodePol = nodePolynomials.get(commonId);
-                                    Polynomial neighbourPol = neighbourPolynomials.get(commonId);
+                                    Polynomial nodePol = new Polynomial(nodePolynomials.get(commonId));
+                                    Polynomial neighbourPol = new Polynomial(neighbourPolynomials.get(commonId));
                                     int nodeComputedValue = nodePol.computeValue(neighbour.getId());
                                     int neighbourComputedValue = neighbourPol.computeValue(n.getId());
                                     if(nodeComputedValue == neighbourComputedValue) {
