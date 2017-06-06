@@ -8,7 +8,6 @@ import fr.timotheecraig.keypredistribution.main.Network;
 import fr.timotheecraig.keypredistribution.main.Node;
 import fr.timotheecraig.keypredistribution.util.Key;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -56,26 +55,55 @@ public class Attacker {
                             l.setLinkLinkState(LinkState.compromised);
                         }
                     }
-                    // Compromise them
 
                 }
                 else {
                     System.out.println("No links in the network \"" + n + "\"");
                 }
+            }
+            else {
+                System.out.println("No nodes in the network \"" + n + "\"");
+            }
+        }
+        else {
+            System.out.println("This network is not of type " + NetworkType.basicScheme.name());
+        }
 
+        return amountOfLinksCompromised;
+    }
+
+    /**
+     * Compromise t nodes on the network and compromised the links attached to the keys from each node.
+     * This function only works on a network following the polynomial scheme.
+     * @param t amount of nodes to compromise
+     * @param n the network
+     * @return the amount of links compromised
+     */
+    public static int compromiseNetwork_Polynomial_Scheme(int t, Network n) {
+        int amountOfLinksCompromised = 0;
+
+        if(n.getScheme() == NetworkType.polynomialScheme) {
+            if(n.getNodes() != null) {
+                ArrayList<Key> generatedKeysFromStolenPolynomials = new ArrayList<Key>();
+                for(Node node: n.getNodes()) {
+                    // Todo here: generate keys from node polynomials with it's neighbours and append it to the array list
+
+                }
+
+                // Todo here: compromise links with the key array
 
             }
             else {
                 System.out.println("No nodes in the network \"" + n + "\"");
             }
-
         }
         else {
-            System.out.println("This network is of type " + NetworkType.basicScheme.name());
+            System.out.println("This network is not of type " + NetworkType.polynomialScheme.name());
         }
 
         return amountOfLinksCompromised;
     }
+
 
     /**
      * This method uncompromises the network (for testing purposes)

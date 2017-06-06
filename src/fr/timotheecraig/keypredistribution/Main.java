@@ -117,80 +117,82 @@ public class Main {
 
         // Polynomial pool-based key pre-distribution for Wireless Sensor Networks (after basic scheme)
 
-        try {
+//        try {
+//
+//            int m = 5; // Size of subset
+//
+//            PrintWriter pr = new PrintWriter("data-collected.txt", "UTF-8");
+//
+//            while (m <= 70) {
 
-            int m = 5; // Size of subset
+        System.out.println("Key Predistribution Simulation - By Timothée Craig");
+        System.out.println("--------------------------------------------------");
 
-            PrintWriter pr = new PrintWriter("data-collected.txt", "UTF-8");
+        Network network = Network.getByDegree(degree, size, nodeEmissionRadius, NetworkType.polynomialScheme);
+        System.out.println(network);
 
-            while (m <= 70) {
-                System.out.println("Key Predistribution Simulation - By Timothée Craig");
-                System.out.println("--------------------------------------------------");
+        System.out.println();
+        System.out.println("        Done with network initialisation          ");
+        System.out.println("             Adding polynomials...                ");
+        System.out.println("--------------------------------------------------");
+        System.out.println();
 
-                Network network = Network.getByDegree(degree, size, nodeEmissionRadius, NetworkType.polynomialScheme);
-                System.out.println(network);
+        network.generatePolynomialPool(1000, 10, (int) Math.pow(2, 8));
+        System.out.println(network);
 
-                System.out.println();
-                System.out.println("        Done with network initialisation          ");
-                System.out.println("             Adding polynomials...                ");
-                System.out.println("--------------------------------------------------");
-                System.out.println();
-
-                network.generatePolynomialPool(1000, 10, (int) Math.pow(2, 8));
-                System.out.println(network);
-
-                //network.displayPolynomialPool();
+        //network.displayPolynomialPool();
 
 //        for (Node node : network.getNodes()) {
 //            System.out.println(node);
 //        }
 
-                System.out.println();
-                System.out.println("           Pre-Distributing polynomials           ");
-                System.out.println("--------------------------------------------------");
-                System.out.println();
+        System.out.println();
+        System.out.println("           Pre-Distributing polynomials           ");
+        System.out.println("--------------------------------------------------");
+        System.out.println();
 
-                network.predistributePolynomials(m);
-                network.setNodesInitialised();
+        network.predistributePolynomials(20);
+        network.setNodesInitialised();
 
-                //network.getNodes().forEach(Node::displayPolynomials);
-                // network.displayKeys(); // Keys are random atm, better make it less random sometime
+        //network.getNodes().forEach(Node::displayPolynomials);
+        // network.displayKeys(); // Keys are random atm, better make it less random sometime
 
-                System.out.println();
-                System.out.println("                     Deploying...                 ");
-                System.out.println("         Initializing neighbour discovery         ");
-                System.out.println("--------------------------------------------------");
-                System.out.println();
+        System.out.println();
+        System.out.println("                     Deploying...                 ");
+        System.out.println("         Initializing neighbour discovery         ");
+        System.out.println("--------------------------------------------------");
+        System.out.println();
 
-                network.neighbourDiscovery();
+        network.neighbourDiscovery();
 
-                System.out.println();
-                System.out.println("                    Creating paths                ");
-                System.out.println("--------------------------------------------------");
-                System.out.println();
+        System.out.println();
+        System.out.println("                    Creating paths                ");
+        System.out.println("--------------------------------------------------");
+        System.out.println();
 
-                network.createLinks_polynomials();
-                double ratio = ((double) (network.getTotalNumberOfSecuredLinks())) / network.getTotalNumberOfLinks();
-                System.out.println("Amount Of Secure Links / Amount of Links = " + ratio);
+        network.createLinks_polynomials();
+        double ratio = ((double) (network.getTotalNumberOfSecuredLinks())) / network.getTotalNumberOfLinks();
+        System.out.println("Amount Of Secure Links / Amount of Links = " + ratio);
 
-                pr.println(ratio);
-                //network.displayLinks();
-                //network.displayNodes();
+//        pr.println(ratio);
+        //network.displayLinks();
+        //network.displayNodes();
 
-                System.out.println();
-                System.out.println("            Attacker attack the network           ");
-                System.out.println("--------------------------------------------------");
-                System.out.println();
+        System.out.println();
+        System.out.println("            Attacker attack the network           ");
+        System.out.println("--------------------------------------------------");
+        System.out.println();
 
-                //Attacker.compromiseNodes(10, network);
-                //network.displayNodes(NodeState.compromised);
-                m++;
-            }
-            pr.close();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //Attacker.compromiseNodes(10, network);
+        //network.displayNodes(NodeState.compromised);
+//                m++;
+//            }
+//            pr.close();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 
     }
