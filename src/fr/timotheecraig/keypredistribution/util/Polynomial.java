@@ -1,6 +1,7 @@
 package fr.timotheecraig.keypredistribution.util;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -9,42 +10,32 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Polynomial {
 
-    private int identifier;
     private int[] coefs; // [a, b, c...n] => a + b*x*y + c*x²y²+...+n*(x^n)*(y^n)
     private int module;
 
     /**
-     * Get the identifier of a polynomial
-     * @return the identifier of a polynomial
-     */
-    public int getIdentifier() {
-        return identifier;
-    }
-
-    /**
-     * Get the coefficients of a polynomial : [a, b, c...n] => a + b*x*y + c*x²y²+...+n*(x^n)*(y^n)
+     * Get the coefficients of a polynomial : [a, b, c...n] | a + b*x*y + c*x²y²+...+n*(x^n)*(y^n)
      * @return the coefs of a polynomial
      */
     public int[] getCoefs() {
         return coefs;
     }
 
-    public Polynomial(int identifier, int[] coefs) {
-        this.identifier = identifier;
+    public Polynomial(int[] coefs) {
         this.coefs = coefs;
-        this.module = ThreadLocalRandom.current().nextInt(1, 20 + 1); // Random int in [1;20]
-
+        int randomMultiplier = ThreadLocalRandom.current().nextInt(1, 9 + 1); // Random int in [1;20]
+        this.module = randomMultiplier * (int) Math.pow(2, 8);
     }
 
     @Override
     public String toString() {
-        return "Polynomial "+ identifier + " : " + Arrays.toString(coefs);
+        return "Polynomial : " + Arrays.toString(coefs);
     }
 
     /**
      * Apply the id of the node to the coefs
      * example :
-     * f(x,y) = 3 + 5xy  => f(id, y) = 3 + 5*id*y
+     * f(x,y) = 3 + 5xy | f(id, y) = 3 + 5*id*y
      * @param id the identifier of the node
      */
     public void applyIdToCoefs(int id) {
@@ -56,7 +47,7 @@ public class Polynomial {
         }
     }
 
-    public static Polynomial generatePolynomial(int identifier, int maxPolynomialOrder, int biggestCoef) {
+    public static Polynomial generatePolynomial(int maxPolynomialOrder, int biggestCoef) {
 
         // generate random coefs
         int[] coefs = new int[maxPolynomialOrder + 1]; // example : order = 2 : 3 coefs
@@ -67,6 +58,7 @@ public class Polynomial {
             }
             coefs[i] = randomCoef;
         }
-        return new Polynomial(identifier, coefs);
+        return new Polynomial(coefs);
     }
+
 }

@@ -16,7 +16,7 @@ public class Network {
 
     private String name;
     private ArrayList<Node> nodes;
-    private ArrayList<Polynomial> mainPolynomialsPool;
+    private HashMap<Integer, Polynomial> mainPolynomialsPool;
     private ArrayList<Key> keys; // This will be replaced with the main polynomials pool later on
     private ArrayList<Link> links;
     private NetworkType scheme;
@@ -37,7 +37,7 @@ public class Network {
         return scheme;
     }
 
-    public ArrayList<Polynomial> getMainPolynomialsPool() {
+    public HashMap<Integer, Polynomial> getMainPolynomialsPool() {
         return mainPolynomialsPool;
     }
 
@@ -45,8 +45,23 @@ public class Network {
         return links;
     }
 
+    public int getTotalNumberOfLinks() {
+        return totalNumberOfLinks;
+    }
+
+    public int getTotalNumberOfSecuredLinks() {
+        return totalNumberOfSecuredLinks;
+    }
+
     // Constructors
-    public Network(String networkName, ArrayList<Node> networkNodes, ArrayList<Polynomial> mainPolynomialsPool) {
+
+    /**
+     * Create a network instance.
+     * @param networkName the network name
+     * @param networkNodes the nodes that constitute the network
+     * @param mainPolynomialsPool the polynomials pool for this network
+     */
+    public Network(String networkName, ArrayList<Node> networkNodes, HashMap<Integer, Polynomial> mainPolynomialsPool) {
         this.name = networkName;
         this.nodes = networkNodes;
         this.mainPolynomialsPool = mainPolynomialsPool;
@@ -131,8 +146,9 @@ public class Network {
 
     /**
      * Add nodes to the network.
-     *
      * @param amount amount of nodes to add
+     * @param emissionRadius the emission radius of the nodes
+     * @param sizeOfGrid the size of one side of the area
      */
     public void addAmountOfNodes(int amount, int emissionRadius, int sizeOfGrid) {
         String nodeName = "node-";
@@ -214,10 +230,10 @@ public class Network {
      */
     public void generatePolynomialPool(int amount, int maxPolynomialOrder, int biggestCoef) {
         if (this.mainPolynomialsPool == null) {
-            this.mainPolynomialsPool = new ArrayList<Polynomial>();
+            this.mainPolynomialsPool = new HashMap<Integer, Polynomial>();
             for (int i = 0; i < amount; i++) {
                 int randomPolynomialOrder = ThreadLocalRandom.current().nextInt(2, maxPolynomialOrder + 1);
-                this.mainPolynomialsPool.add(Polynomial.generatePolynomial(i, randomPolynomialOrder, biggestCoef));
+                this.mainPolynomialsPool.put(i, Polynomial.generatePolynomial(randomPolynomialOrder, biggestCoef));
             }
         }
 
@@ -246,34 +262,23 @@ public class Network {
      * @param amountOfPolynomialsToDistribute This is the amount of polynomials to distribute per node.
      */
     public void predistributePolynomials(int amountOfPolynomialsToDistribute) {
-        ArrayList<Polynomial> copy = new ArrayList<>(this.mainPolynomialsPool);
         if(this.mainPolynomialsPool != null) {
-            amountOfPolynomialsToDistribute = amountOfPolynomialsToDistribute < copy.size() ? amountOfPolynomialsToDistribute : copy.size();
+            amountOfPolynomialsToDistribute =
+                    amountOfPolynomialsToDistribute < this.mainPolynomialsPool.size() ? amountOfPolynomialsToDistribute : this.mainPolynomialsPool.size();
+            ArrayList<Integer> keysCopy = new ArrayList<Integer>(this.mainPolynomialsPool.keySet());
             for (Node node: this.nodes) {
-                Collections.shuffle(copy);
-                List<Polynomial> subList = copy.subList(0, amountOfPolynomialsToDistribute);
-                for(Polynomial p: subList) {
-                    p.applyIdToCoefs(node.getId());
+                HashMap<Integer, Polynomial> polyToDistrib = new HashMap<Integer, Polynomial>();
+                Collections.shuffle(keysCopy);
+                List<Integer> subList = keysCopy.subList(0, amountOfPolynomialsToDistribute);
+                for(int i = 0; i < subList.size(); i++) {
+                    int myKey = subList.get(i);
+                    polyToDistrib.put(myKey, this.mainPolynomialsPool.get(myKey));
                 }
-                node.distributePolynomials(subList);
+                /*for(Polynomial p: subList) {
+                    p.applyIdToCoefs(node.getId());
+                }*/
+                node.distributePolynomials(polyToDistrib);
             }
-        }
-    }
-
-    @Override
-    public String toString() {
-        int nodesLen = this.nodes != null ? this.nodes.size() : 0;
-        int keyPoolLen = this.keys != null ? this.keys.size() : 0;
-        return this.name + " : " + nodesLen + " nodes, " + keyPoolLen + " keys";
-    }
-
-    /**
-     * This method creates paths between nodes.
-     */
-    public void createPaths() {
-        this.links = this.links == null ? this.links = new ArrayList<Link>() : this.links;
-        for (Node node : this.nodes) {
-            this.links.addAll(node.compareNeighbours());
         }
     }
 
@@ -299,7 +304,9 @@ public class Network {
      * Get a network by its average degree, generating the proper amount of nodes from this degree.
      * @param degree = pi**(nodeEmissionRadius²) * density
      * @param size the size in meter of a side of the square to generate
-     * @return
+     * @param nodeEmissionRadius the emission radius of a node
+     * @param scheme the scheme employed for the network
+     * @return a network instance
      */
     public static Network getByDegree(int degree, int size, int nodeEmissionRadius, NetworkType scheme) {
         Network network = new Network("My WSN");
@@ -310,38 +317,88 @@ public class Network {
         return network;
     }
 
-    public void createLinks() {
-        if(this.nodes != null) {
-            for (Node n: this.nodes){
-                ArrayList<Node> nNeighbours = n.getNeighbours();
-                if(nNeighbours != null) {
-                    for(Node node: nNeighbours) {
-                        if(!node.isVisited) { // if the neighbour of n wasn't visited
-                            this.totalNumberOfLinks++;
-                            this.links = this.links == null ? new ArrayList<Link>() : this.links;
-                            // perform temporary copies
-                            ArrayList<Key> neighbourKeys = new ArrayList<Key>(node.getKeys());
-                            ArrayList<Key> nodeKeys = new ArrayList<Key>(n.getKeys());
-                            // Get common elements between both lists
-                            nodeKeys.retainAll(neighbourKeys);
-                            if(nodeKeys.size() > 0) { // If they share a common key
-                                this.totalNumberOfSecuredLinks++;
-                                // TODO here: add a link creation
-                                this.links.add(new Link(node, n, nodeKeys.get(0)));
+    /**
+     * This function add links to the link array on a network, checking every node neighbours and then creating
+     * the links.
+     */
+    public void createLinks_basic() {
+        if(this.scheme == NetworkType.basicScheme) {
+            if(this.nodes != null) {
+                for (Node n: this.nodes){
+                    ArrayList<Node> nNeighbours = n.getNeighbours();
+                    if(nNeighbours != null) {
+                        for(Node node: nNeighbours) {
+                            if(!node.isVisited) { // if the neighbour of n wasn't visited
+                                this.totalNumberOfLinks++;
+                                this.links = this.links == null ? new ArrayList<Link>() : this.links;
+                                // perform temporary copies
+                                ArrayList<Key> neighbourKeys = new ArrayList<Key>(node.getKeys());
+                                ArrayList<Key> nodeKeys = new ArrayList<Key>(n.getKeys());
+                                // Get common elements between both lists
+                                nodeKeys.retainAll(neighbourKeys);
+                                if(nodeKeys.size() > 0) { // If they share a common key
+                                    this.totalNumberOfSecuredLinks++;
+                                    this.links.add(new Link(node, n, nodeKeys.get(0)));
+                                }
+                            }
+                        }
+                    }
+                    n.isVisited = true;
+                }
+            }
+        }
+        else {
+            System.out.println("The network isn't using the basic scheme.");
+        }
+    }
+
+    public void createLinks_polynomials() {
+        if(this.scheme == NetworkType.polynomialScheme) {
+            if(this.nodes != null) {
+                for(Node n : this.nodes) {
+                    ArrayList<Node> nNeighbours = n.getNeighbours();
+                    if(nNeighbours != null) {
+                        for (Node neighbour: nNeighbours) {
+                            if(!neighbour.isVisited) {
+                                this.totalNumberOfLinks++;
+                                HashMap<Integer, Polynomial>  neighbourPolynomials = new HashMap<Integer, Polynomial>(neighbour.getPolynomials());
+                                HashMap<Integer, Polynomial>  nodePolynomials = new HashMap<Integer, Polynomial>(n.getPolynomials());
+
+                                // Check if they have some polynomials in common with the same polynomial Id
+                                // If they do, check if applying the id of the nodes to the polynomials make them equal
+                                // Example : node-1, node-2, polynomial in common: [1,2,3]
+                                // f(1,y) = 1 + 2y + 3y²
+                                // f(2,y) = 1 + 4y + 12y²
+                                // f(1,2) = f(2,1)
+                                // => 1 + 2*2 + 3*2² = 1 + 4*1 + 12*1²
+                                // create a key for the link from the polynomial -> From the computed result
+
+                                //ArrayList<Polynomial> commonPolynomials = Polynomial.comparePolynomialsArray(nodePolynomials, neighbourPolynomials);
+
+
                             }
                         }
                     }
                 }
-                n.isVisited = true;
             }
+        }
+        else {
+            System.out.println("The network isn't using the polynomial scheme.");
         }
     }
 
-    public int getTotalNumberOfLinks() {
-        return totalNumberOfLinks;
+    @Override
+    public String toString() {
+        int nodesLen = this.nodes != null ? this.nodes.size() : 0;
+        if(this.scheme == NetworkType.basicScheme) {
+            int keyPoolLen = this.keys != null ? this.keys.size() : 0;
+            return this.name + " : " + nodesLen + " nodes, " + keyPoolLen + " keys";
+        }
+        else if (this.scheme == NetworkType.polynomialScheme) {
+            int polPoolLen = this.mainPolynomialsPool != null ? this.mainPolynomialsPool.size() : 0;
+            return this.name + " : " + nodesLen + " nodes, " + polPoolLen + " polynomials";
+        }
+        return this.name + " : " + nodesLen + " nodes.";
     }
 
-    public int getTotalNumberOfSecuredLinks() {
-        return totalNumberOfSecuredLinks;
-    }
 }

@@ -6,6 +6,7 @@ import fr.timotheecraig.keypredistribution.util.Coordinates;
 import fr.timotheecraig.keypredistribution.util.Polynomial;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -17,19 +18,19 @@ public class Node {
     private String name;
     private Coordinates coordinates;
     private int emissionRadius; // max radius to which the node can find its neighbours
-    private List<Polynomial> polynomials;
+    private HashMap<Integer, Polynomial> polynomials;
     private List<Key> keys;
     private ArrayList<Node> neighbours;
     private ArrayList<Link> links;
     private NodeState nodeState;
     public boolean isVisited;
 
-    public Node(int id, String name, Coordinates coords, int emissionRadius, List<Polynomial> keys) {
+    public Node(int id, String name, Coordinates coords, int emissionRadius, List<Key> keys) {
         this.id = id;
         this.name = name;
         this.coordinates = coords;
         this.emissionRadius = emissionRadius;
-        this.polynomials = keys;
+        this.keys = keys;
         this.links = new ArrayList<Link>();
         this.nodeState = NodeState.waitingForInit;
         this.isVisited = false;
@@ -57,7 +58,7 @@ public class Node {
 
     /**
      * Get the radius of a node.
-     * @return emissionRadius of a node.
+     * @return emissionRadius of a node
      */
     public int getEmissionRadius() {
         return emissionRadius;
@@ -72,10 +73,42 @@ public class Node {
     }
 
     /**
+     * Set the state of a node
+     * @param state the state of a node
+     */
+    public void setState(NodeState state) {
+        this.nodeState = state;
+    }
+
+    /**
+     * Get the state of a node.
+     * @return the state of a node
+     */
+    public NodeState getState() {
+        return this.nodeState;
+    }
+
+    /**
+     * Get the neighbours of a node.
+     * @return the list of neighbours of a node
+     */
+    public ArrayList<Node> getNeighbours() {
+        return this.neighbours;
+    }
+
+    /**
+     * Get the keys of a node
+     * @return the list of keys of a node
+     */
+    public List<Key> getKeys() {
+        return keys;
+    }
+
+    /**
      * Get the polynomials of a node.
      * @return polynomials of a node
      */
-    public List<Polynomial> getPolynomials() { return polynomials; }
+    public HashMap<Integer, Polynomial> getPolynomials() { return polynomials; }
 
     /**
      * Set a node's coordinates.
@@ -135,9 +168,26 @@ public class Node {
      * Set the polynomials of a node
      * @param pol list of polynomials to copy
      */
-    public void distributePolynomials(List<Polynomial> pol) {
+    public void distributePolynomials(HashMap<Integer, Polynomial> pol) {
         // this.polynomials = pol; -> Keeping this here, we must COPY pol to polynomials, not set it to "=" as it's modified later on
-        this.polynomials = new ArrayList<Polynomial>(pol);
+        this.polynomials = new HashMap<Integer, Polynomial>(pol);
+    }
+
+    /**
+     * Check if the node has common polynomials with it's neighbours.
+     * @return a list of created links if the nodes share a common polynomial
+     */
+    public ArrayList<Link> compareNeighbours_polynomials() {
+        // Remove this method someday, will use network.createLinks_polynomials()
+        ArrayList<Link> links = new ArrayList<Link>();
+        if(this.neighbours != null) {
+            for(Node neighbour : this.neighbours) {
+                int neighbourId = neighbour.getId(); // -> will be used to try the polynomials
+                HashMap<Integer, Polynomial> neighboursPolynomials = neighbour.getPolynomials();
+
+            }
+        }
+        return links;
     }
 
     @Override
@@ -150,42 +200,5 @@ public class Node {
                 + neighbourSize + " neighbours, " + keysSize + " keys, " + polynomialPoolSize + " polynomials, " + linksSize + " links, state : " + this.nodeState;
     }
 
-    /**
-     * Check if the node has common polynomials with it's neighbours.
-     * @return a list of created links if the nodes share a common polynomial
-     */
-    public ArrayList<Link> compareNeighbours() {
-        ArrayList<Link> links = new ArrayList<Link>();
-        if(this.neighbours != null) {
-            for (Node node : this.neighbours) {
-                for (Polynomial pol : this.polynomials) {
-                    if (node.getPolynomials().contains(pol)) { // If the neighbours polynomials array contains a polynomial of the node
-                        Link link = new Link(this, node, pol);
-                        if(!links.contains(link)) {
-                            links.add(link);
-                            this.links.add(link);
-                        }
-                    }
-                }
-            }
-        }
-        return links;
-    }
 
-    public void setState(NodeState state) {
-        this.nodeState = state;
-    }
-
-    public NodeState getState() {
-        return this.nodeState;
-    }
-
-
-    public ArrayList<Node> getNeighbours() {
-        return this.neighbours;
-    }
-
-    public List<Key> getKeys() {
-        return keys;
-    }
 }

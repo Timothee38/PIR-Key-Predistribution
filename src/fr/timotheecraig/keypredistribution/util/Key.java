@@ -28,12 +28,13 @@ public class Key {
 
     /**
      * Generate a key from a polynomial.
-     * @param p a polynomial
+     * @param result the result of a computed polynomial
      * @return a new Key from the generated String
      */
-    public static String createKeyFromPolynomial(Polynomial p) {
-        String ret = "(KEY) TODO: generate key from polynomial";
-        return ret;
+    public static Key createKeyFromPolynomial(int result) {
+        String ret = Integer.toBinaryString(result); // 8 bits for the key (2¹²⁸ is too big)
+        // Form of the key : "01011010" -> the result of the polynomial operation
+        return new Key(ret);
     }
 
     @Override
