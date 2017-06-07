@@ -6,6 +6,7 @@ import fr.timotheecraig.keypredistribution.main.Network;
 import fr.timotheecraig.keypredistribution.main.Node;
 import fr.timotheecraig.keypredistribution.ui.Display;
 
+import java.awt.*;
 import java.io.PrintWriter;
 
 /**
@@ -16,16 +17,16 @@ public class Main {
     public static void main(String[] args) {
 
         int keysPerNode = 50;
-        int amountOfKeys = 1000;
+        int amountOfKeys = 10000;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;
-        int degree = 4; // 4 nodes
+        int degree = 10; // 4 nodes
         int size = 1000; // 1000 meters
         int nodeEmissionRadius = 50; // 50 meters
 
         // BASIC SCHEME
 
-        /*
+
         try {
 
             PrintWriter pr = new PrintWriter("data-collected.txt", "UTF-8");
@@ -83,6 +84,8 @@ public class Main {
             System.out.println("Amount of links created: " + amountOfLinks);
 
             int maxAmountOfNodes = network.getNodes().size();
+            Display d = new Display(network.getNodes(), network.getLinks(), size);
+            Graphics g = d.getGraphics();
             int t = 1;
             while(t < maxAmountOfNodes) {
                 System.out.println("");
@@ -99,17 +102,21 @@ public class Main {
                 // Potentially we could make it less random, in order to have a nicer graph. (giving the attacker the indexes
                 // of the nodes to corrupt.
                 pr.println(t+";"+((double)amountOfCompromisedLinks/amountOfLinks));
-
+                d.setLinks(network.getLinks());
+                d.setNodes(network.getNodes());
+                d.paint(g);
                 //Attacker.uncompromiseNodes(network);
-
                 t++;
+
+                Thread.sleep(500);
+
             }
 
             pr.close();
 
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
 
         //
         //
@@ -126,7 +133,7 @@ public class Main {
 //
 //            while (m <= 70) {
 
-        System.out.println("Key Predistribution Simulation - By Timothée Craig");
+      /*  System.out.println("Key Predistribution Simulation - By Timothée Craig");
         System.out.println("--------------------------------------------------");
 
         Network network = Network.getByDegree(degree, size, nodeEmissionRadius, NetworkType.polynomialScheme);
@@ -138,7 +145,7 @@ public class Main {
         System.out.println("--------------------------------------------------");
         System.out.println();
 
-        network.generatePolynomialPool(1000, 10, (int) Math.pow(2, 16));
+        network.generatePolynomialPool(amountOfKeys, 10, (int) Math.pow(2, 16));
         System.out.println(network);
 
         //network.displayPolynomialPool();
@@ -203,7 +210,7 @@ public class Main {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-
+*/
 
     }
 

@@ -53,4 +53,12 @@ public class Display extends JFrame {
             g.drawLine(sensors.get(i).getCoordX(), sensors.get(i).getCoordY(), sensors.get(i).getCoordX(), sensors.get(i).getCoordY());
         }
     }
+
+    public void setNodes(ArrayList<Node> nodes) {
+        this.sensors = nodes;
+    }
+
+    public void setLinks(ArrayList<Link> links) {
+        this.links = links;
+    }
 }
