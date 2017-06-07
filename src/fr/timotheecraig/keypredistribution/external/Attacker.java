@@ -106,7 +106,6 @@ public class Attacker {
 
                                 Integer commonId = Polynomial.getCommonId(nodePolynomials, neighbourPolynomials);
                                 if(commonId != -1) {
-                                    // make a copy ?
                                     Polynomial nodePol = new Polynomial(nodePolynomials.get(commonId));
                                     Polynomial neighbourPol = new Polynomial(neighbourPolynomials.get(commonId));
                                     int nodeComputedValue = nodePol.computeValue(neighbour.getId());
@@ -125,6 +124,7 @@ public class Attacker {
                    for(Link l: n.getLinks()) {
                        if(generatedKeysFromStolenPolynomials.contains(l.getKey().getKeyString())) {
                            amountOfLinksCompromised++;
+                           l.setLinkLinkState(LinkState.compromised);
                        }
                    }
                 }

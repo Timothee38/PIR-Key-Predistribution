@@ -29,7 +29,7 @@ public class Polynomial {
     public Polynomial(int[] coefs) {
         this.coefs = coefs;
         int randomMultiplier = ThreadLocalRandom.current().nextInt(1, 9 + 1); // Random int in [1;9]
-        this.module = randomMultiplier * (int) Math.pow(2, 8);
+        this.module = randomMultiplier * (int) Math.pow(2, 16);
     }
 
     @Override

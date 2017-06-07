@@ -184,4 +184,11 @@ public class Node {
     }
 
 
+    public int getCoordX() {
+        return this.coordinates.getX();
+    }
+
+    public int getCoordY() {
+        return this.coordinates.getY();
+    }
 }

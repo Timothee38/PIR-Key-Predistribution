@@ -4,6 +4,7 @@ import fr.timotheecraig.keypredistribution.enums.NetworkType;
 import fr.timotheecraig.keypredistribution.external.Attacker;
 import fr.timotheecraig.keypredistribution.main.Network;
 import fr.timotheecraig.keypredistribution.main.Node;
+import fr.timotheecraig.keypredistribution.ui.Display;
 
 import java.io.PrintWriter;
 
@@ -14,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        int keysPerNode = 5;
+        int keysPerNode = 50;
         int amountOfKeys = 1000;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;
@@ -137,7 +138,7 @@ public class Main {
         System.out.println("--------------------------------------------------");
         System.out.println();
 
-        network.generatePolynomialPool(1000, 10, (int) Math.pow(2, 8));
+        network.generatePolynomialPool(1000, 10, (int) Math.pow(2, 16));
         System.out.println(network);
 
         //network.displayPolynomialPool();
@@ -189,6 +190,10 @@ public class Main {
         int amountOfCompromisedLinks = Attacker.compromiseNetwork_Polynomial_Scheme(5, network);
         System.out.println("Resilience for "+ 5 +" nodes compromised, with "
                 + keysPerNode + " polynomials each : " + ((double) amountOfCompromisedLinks / amountOfLinks));
+
+
+        Display d = new Display(network.getNodes(), network.getLinks(), size);
+
         //Attacker.compromiseNodes(10, network);
         //network.displayNodes(NodeState.compromised);
 //                m++;

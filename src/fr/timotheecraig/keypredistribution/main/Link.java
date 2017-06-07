@@ -55,6 +55,18 @@ public class Link {
         return key;
     }
 
+    public LinkState getLinkState() {
+        return linkState;
+    }
+
+    public Node getNode1() {
+        return node1;
+    }
+
+    public Node getNode2() {
+        return node2;
+    }
+
     @Override
     public String toString() {
         return node1.getName() + " - " + node2.getName() + " : " + this.linkState.name();
