@@ -3,7 +3,6 @@ package fr.timotheecraig.keypredistribution;
 import fr.timotheecraig.keypredistribution.enums.NetworkType;
 import fr.timotheecraig.keypredistribution.external.Attacker;
 import fr.timotheecraig.keypredistribution.main.Network;
-import fr.timotheecraig.keypredistribution.main.Node;
 import fr.timotheecraig.keypredistribution.ui.Display;
 
 import java.awt.*;
@@ -16,7 +15,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        int keysPerNode = 50;
+        // Travailler avec unsigned ints et la plus grande structure java
+
+        int keysPerNode = 150;
         int amountOfKeys = 10000;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;

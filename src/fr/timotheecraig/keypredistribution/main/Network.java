@@ -381,6 +381,7 @@ public class Network {
                                     Polynomial neighbourPol = new Polynomial(neighbourPolynomials.get(commonId));
                                     int nodeComputedValue = nodePol.computeValue(neighbour.getId());
                                     int neighbourComputedValue = neighbourPol.computeValue(n.getId());
+                                    System.out.println(nodeComputedValue);
                                     if(nodeComputedValue == neighbourComputedValue) {
                                         this.totalNumberOfSecuredLinks++;
                                         this.links.add(new Link(n, neighbour, Key.createKeyFromPolynomial(nodeComputedValue)));

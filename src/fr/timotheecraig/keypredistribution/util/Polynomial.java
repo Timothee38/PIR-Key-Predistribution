@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Polynomial {
 
-    private int[] coefs; // [a, b, c...n] => a + b*x*y + c*x²y²+...+n*(x^n)*(y^n)
+    private int[] coefs; // [a, b, c...n] => a + b*(x+y) + c*x*y+...+n*(x^n)*(y^n)
     private int module;
 
     public Polynomial(Polynomial polynomial) {
@@ -19,7 +19,7 @@ public class Polynomial {
     }
 
     /**
-     * Get the coefficients of a polynomial : [a, b, c...n] | a + b*x*y + c*x²y²+...+n*(x^n)*(y^n)
+     * Get the coefficients of a polynomial : [a, b, c...n] | a + b*(x+y) + c*x*y+...+n*(x^n)*(y^n)
      * @return the coefs of a polynomial
      */
     public int[] getCoefs() {
