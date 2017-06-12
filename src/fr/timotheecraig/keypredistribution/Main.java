@@ -17,7 +17,7 @@ public class Main {
 
         // Travailler avec unsigned ints et la plus grande structure java
 
-        int keysPerNode = 150;
+        int keysPerNode = 100;
         int amountOfKeys = 10000;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;
@@ -27,7 +27,7 @@ public class Main {
 
         // BASIC SCHEME
 
-
+/*
         try {
 
             PrintWriter pr = new PrintWriter("data-collected.txt", "UTF-8");
@@ -117,7 +117,7 @@ public class Main {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         //
         //
@@ -134,7 +134,7 @@ public class Main {
 //
 //            while (m <= 70) {
 
-      /*  System.out.println("Key Predistribution Simulation - By Timothée Craig");
+        System.out.println("Key Predistribution Simulation - By Timothée Craig");
         System.out.println("--------------------------------------------------");
 
         Network network = Network.getByDegree(degree, size, nodeEmissionRadius, NetworkType.polynomialScheme);
@@ -146,7 +146,7 @@ public class Main {
         System.out.println("--------------------------------------------------");
         System.out.println();
 
-        network.generatePolynomialPool(amountOfKeys, 10, (int) Math.pow(2, 16));
+        network.generatePolynomialPool(amountOfKeys, 10, (int) Math.pow(2, 8));
         System.out.println(network);
 
         //network.displayPolynomialPool();
@@ -211,7 +211,7 @@ public class Main {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-*/
+
 
     }
 

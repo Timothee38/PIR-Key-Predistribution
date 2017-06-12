@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Polynomial {
 
-    private int[] coefs; // [a, b, c...n] => a + b*(x+y) + c*x*y+...+n*(x^n)*(y^n)
+    private long[] coefs; // [a, b, c...n] => a + b*(x+y) + c*x*y+...+n*(x^n)*(y^n)
     private int module;
 
     public Polynomial(Polynomial polynomial) {
@@ -22,14 +22,17 @@ public class Polynomial {
      * Get the coefficients of a polynomial : [a, b, c...n] | a + b*(x+y) + c*x*y+...+n*(x^n)*(y^n)
      * @return the coefs of a polynomial
      */
-    public int[] getCoefs() {
+    public long[] getCoefs() {
         return coefs;
     }
 
-    public Polynomial(int[] coefs) {
-        this.coefs = coefs;
+    public Polynomial(long[] coefs) {
         int randomMultiplier = ThreadLocalRandom.current().nextInt(1, 9 + 1); // Random int in [1;9]
-        this.module = randomMultiplier * (int) Math.pow(2, 16);
+        this.module = randomMultiplier * (int) Math.pow(2, 8);
+        for(long coef: coefs) {
+            coef %= this.module;
+        }
+        this.coefs = coefs;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class Polynomial {
         if(this.coefs != null) {
             for(int i = 0; i < this.coefs.length; i++) {
                 int computedValue = (int) (this.coefs[i]*Math.pow(id, i));
-                this.coefs[i] = computedValue;
+                this.coefs[i] = computedValue % this.module;
             }
         }
     }
@@ -55,9 +58,9 @@ public class Polynomial {
     public static Polynomial generatePolynomial(int maxPolynomialOrder, int biggestCoef) {
 
         // generate random coefs
-        int[] coefs = new int[maxPolynomialOrder + 1]; // example : order = 2 : 3 coefs
+        long[] coefs = new long[maxPolynomialOrder + 1]; // example : order = 2 : 3 coefs
         for(int i = 0; i <= maxPolynomialOrder; i++) {
-            int randomCoef = ThreadLocalRandom.current().nextInt(-biggestCoef, biggestCoef + 1);
+            int randomCoef = ThreadLocalRandom.current().nextInt(0, biggestCoef + 1);
 
             coefs[i] = randomCoef;
         }
@@ -80,8 +83,9 @@ public class Polynomial {
         if(this.coefs != null) {
             for(int i = 0; i < this.coefs.length; i++) {
                 ret += (this.coefs[i] * Math.pow(id, i));
+                ret %= this.module;
             }
         }
-        return ret % this.module;
+        return ret;
     }
 }
