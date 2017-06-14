@@ -11,6 +11,8 @@ import fr.timotheecraig.keypredistribution.util.Polynomial;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -104,10 +106,10 @@ public class Attacker {
                                 HashMap<Integer, Polynomial>  neighbourPolynomials = new HashMap<Integer, Polynomial>(neighbour.getPolynomials());
                                 HashMap<Integer, Polynomial>  nodePolynomials = new HashMap<Integer, Polynomial>(node.getPolynomials());
 
-                                Integer commonId = Polynomial.getCommonId(nodePolynomials, neighbourPolynomials);
-                                if(commonId != -1) {
-                                    Polynomial nodePol = new Polynomial(nodePolynomials.get(commonId));
-                                    Polynomial neighbourPol = new Polynomial(neighbourPolynomials.get(commonId));
+                                List<Integer> commonId = Polynomial.getCommonIds(nodePolynomials, neighbourPolynomials);
+                                if(commonId.size() >= 1) {
+                                    Polynomial nodePol = new Polynomial(nodePolynomials.get(commonId.get(0)));
+                                    Polynomial neighbourPol = new Polynomial(neighbourPolynomials.get(commonId.get(0)));
                                     int nodeComputedValue = nodePol.computeValue(neighbour.getId());
                                     int neighbourComputedValue = neighbourPol.computeValue(node.getId());
                                     if(nodeComputedValue == neighbourComputedValue) {

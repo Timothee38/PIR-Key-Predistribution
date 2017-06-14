@@ -6,6 +6,7 @@ import fr.timotheecraig.keypredistribution.util.Coordinates;
 import fr.timotheecraig.keypredistribution.util.Key;
 import fr.timotheecraig.keypredistribution.util.Polynomial;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -232,8 +233,8 @@ public class Network {
         if (this.mainPolynomialsPool == null) {
             this.mainPolynomialsPool = new HashMap<Integer, Polynomial>();
             for (int i = 0; i < amount; i++) {
-                int randomPolynomialOrder = ThreadLocalRandom.current().nextInt(2, maxPolynomialOrder + 1);
-                this.mainPolynomialsPool.put(i, Polynomial.generatePolynomial(randomPolynomialOrder, biggestCoef));
+                int randomPolynomialOrder = ThreadLocalRandom.current().nextInt(1, maxPolynomialOrder + 1);
+                this.mainPolynomialsPool.put(i, Polynomial.generatePolynomial(maxPolynomialOrder, biggestCoef));
             }
         }
 
@@ -265,20 +266,20 @@ public class Network {
         if(this.mainPolynomialsPool != null) {
             amountOfPolynomialsToDistribute =
                     amountOfPolynomialsToDistribute < this.mainPolynomialsPool.size() ? amountOfPolynomialsToDistribute : this.mainPolynomialsPool.size();
-            ArrayList<Integer> keysCopy = new ArrayList<Integer>(this.mainPolynomialsPool.keySet());
+
             for (Node node: this.nodes) {
-                HashMap<Integer, Polynomial> polyToDistrib = new HashMap<Integer, Polynomial>();
-                Collections.shuffle(keysCopy);
-                List<Integer> subList = keysCopy.subList(0, amountOfPolynomialsToDistribute);
-                for(int i = 0; i < subList.size(); i++) {
-                    int myKey = subList.get(i);
-                    polyToDistrib.put(myKey, this.mainPolynomialsPool.get(myKey));
+
+                ArrayList<Integer> hashMapKeys = new ArrayList<Integer>(this.mainPolynomialsPool.keySet());
+                Collections.shuffle(hashMapKeys);
+
+                for (Integer i: hashMapKeys.subList(0, amountOfPolynomialsToDistribute)) {
+                    node.distributePolynomial(i, new Polynomial(this.mainPolynomialsPool.get(i)));
                 }
-                for(Integer key: polyToDistrib.keySet()) {
-                    polyToDistrib.get(key).applyIdToCoefs(node.getId());
-                }
-                node.distributePolynomials(polyToDistrib);
+
+                node.applyIdToAllPolynomials();
+//                node.displayPolynomials();
             }
+
         }
     }
 
@@ -369,19 +370,27 @@ public class Network {
                                 // Check if they have some polynomials in common with the same polynomial Id
                                 // If they do, check if applying the id of the nodes to the polynomials make them equal
                                 // Example : node-1, node-2, polynomial in common: [1,2,3]
-                                // f(1,y) = 1 + 2y + 3y²
-                                // f(2,y) = 1 + 4y + 12y²
+                                // f(1,y) = 1 + 2*(1 + y) + 3*1*y = 3 + 2y + 3y
+                                // f(2,y) = 1 + 2*(2 + y) + 3*2*y = 5 + 2y + 6y
                                 // f(1,2) = f(2,1)
-                                // => 1 + 2*2 + 3*2² = 1 + 4*1 + 12*1²
+                                // => 3 + 2*2 + 3*2 = 5 + 2*1 + 6*1
+                                // => 13 = 13
                                 // create a key for the link from the polynomial -> From the computed result
 
-                                Integer commonId = Polynomial.getCommonId(nodePolynomials, neighbourPolynomials);
-                                if(commonId != -1) {
-                                    Polynomial nodePol = new Polynomial(nodePolynomials.get(commonId));
-                                    Polynomial neighbourPol = new Polynomial(neighbourPolynomials.get(commonId));
+                                List<Integer> commonId = Polynomial.getCommonIds(nodePolynomials, neighbourPolynomials);
+
+                                if(commonId.size() >= 1) {
+//                                    System.out.println("Common Ids :");
+//                                    for (Integer i: commonId) {
+//                                        System.out.println(neighbourPolynomials + " " + nodePolynomials);
+//                                        System.out.println(i + " : " +neighbourPolynomials.get(i) + " | " + nodePolynomials.get(i));
+//                                    }
+                                    Polynomial nodePol = new Polynomial(nodePolynomials.get(commonId.get(0)));
+                                    Polynomial neighbourPol = new Polynomial(neighbourPolynomials.get(commonId.get(0)));
                                     int nodeComputedValue = nodePol.computeValue(neighbour.getId());
                                     int neighbourComputedValue = neighbourPol.computeValue(n.getId());
-                                    System.out.println(nodeComputedValue);
+                                    System.out.println(n.getId() + ": " + nodePol + " | "+ neighbour.getId() + ": " + neighbourPol);
+//                                    System.out.println(nodeComputedValue + " = " + neighbourComputedValue + " ?");
                                     if(nodeComputedValue == neighbourComputedValue) {
                                         this.totalNumberOfSecuredLinks++;
                                         this.links.add(new Link(n, neighbour, Key.createKeyFromPolynomial(nodeComputedValue)));

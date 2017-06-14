@@ -171,6 +171,7 @@ public class Node {
     public void distributePolynomials(HashMap<Integer, Polynomial> pol) {
         // this.polynomials = pol; -> Keeping this here, we must COPY pol to polynomials, not set it to "=" as it's modified later on
         this.polynomials = new HashMap<Integer, Polynomial>(pol);
+//        System.out.println(this + " " + this.polynomials);
     }
 
     @Override
@@ -190,5 +191,18 @@ public class Node {
 
     public int getCoordY() {
         return this.coordinates.getY();
+    }
+
+    public void applyIdToAllPolynomials() {
+        for (Polynomial p: this.polynomials.values()) {
+            p.applyIdToCoefs(this.id);
+        }
+    }
+
+    public void distributePolynomial(int id, Polynomial polynomial) {
+        if(this.polynomials == null) {
+            this.polynomials = new HashMap<Integer, Polynomial>();
+        }
+        this.polynomials.put(id, polynomial);
     }
 }
