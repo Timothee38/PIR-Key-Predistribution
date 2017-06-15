@@ -4,6 +4,8 @@ import fr.timotheecraig.keypredistribution.util.Key;
 import fr.timotheecraig.keypredistribution.util.Polynomial;
 import fr.timotheecraig.keypredistribution.enums.LinkState;
 
+import java.util.List;
+
 /**
  * Created by timothee on 30/05/17.
  */
@@ -12,6 +14,7 @@ public class Link {
     private Node node1;
     private Node node2;
     private Polynomial polynomial;
+    private int polynomialId;
     private Key key;
     private LinkState linkState;
 
@@ -43,6 +46,11 @@ public class Link {
         this.key = key;
     }
 
+    public Link(Node n, Node neighbour, Key keyFromPolynomial, int commonId) {
+        this(n, neighbour, keyFromPolynomial);
+        this.polynomialId = commonId;
+    }
+
     /**
      * Set link state to a new one.
      * @param linkState the link state
@@ -65,6 +73,10 @@ public class Link {
 
     public Node getNode2() {
         return node2;
+    }
+
+    public int getPolynomialId() {
+        return polynomialId;
     }
 
     @Override

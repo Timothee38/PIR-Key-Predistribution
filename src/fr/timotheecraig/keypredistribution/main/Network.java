@@ -234,7 +234,7 @@ public class Network {
             this.mainPolynomialsPool = new HashMap<Integer, Polynomial>();
             for (int i = 0; i < amount; i++) {
                 int randomPolynomialOrder = ThreadLocalRandom.current().nextInt(1, maxPolynomialOrder + 1);
-                this.mainPolynomialsPool.put(i, Polynomial.generatePolynomial(maxPolynomialOrder, biggestCoef));
+                this.mainPolynomialsPool.put(i, Polynomial.generatePolynomial(maxPolynomialOrder, biggestCoef, maxPolynomialOrder));
             }
         }
 
@@ -389,11 +389,11 @@ public class Network {
                                     Polynomial neighbourPol = new Polynomial(neighbourPolynomials.get(commonId.get(0)));
                                     int nodeComputedValue = nodePol.computeValue(neighbour.getId());
                                     int neighbourComputedValue = neighbourPol.computeValue(n.getId());
-                                    System.out.println(n.getId() + ": " + nodePol + " | "+ neighbour.getId() + ": " + neighbourPol);
+//                                    System.out.println(n.getId() + ": " + nodePol + " | "+ neighbour.getId() + ": " + neighbourPol);
 //                                    System.out.println(nodeComputedValue + " = " + neighbourComputedValue + " ?");
                                     if(nodeComputedValue == neighbourComputedValue) {
                                         this.totalNumberOfSecuredLinks++;
-                                        this.links.add(new Link(n, neighbour, Key.createKeyFromPolynomial(nodeComputedValue)));
+                                        this.links.add(new Link(n, neighbour, Key.createKeyFromPolynomial(nodeComputedValue), commonId.get(0)));
                                     }
                                 }
                             }

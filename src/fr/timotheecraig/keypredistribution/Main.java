@@ -17,11 +17,12 @@ public class Main {
 
         // Travailler avec unsigned ints et la plus grande structure java
 
-        int keysPerNode = 1;
-        int amountOfKeys = 1;
+        int keysPerNode = 200;
+        int amountOfKeys = 10000;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;
-        int degree = 4; // 4 nodes
+        int polynomialsOrder = 2;
+        int degree = 10; // 4 nodes
         int size = 1000; // 1000 meters
         int nodeEmissionRadius = 50; // 50 meters
 
@@ -146,7 +147,7 @@ public class Main {
             System.out.println("--------------------------------------------------");
             System.out.println();
 
-            network.generatePolynomialPool(amountOfKeys, 1, (int) Math.pow(2, 8));
+            network.generatePolynomialPool(amountOfKeys, polynomialsOrder, (int) Math.pow(2, 8));
             System.out.println(network);
 
 //            network.displayPolynomialPool();
@@ -191,7 +192,7 @@ public class Main {
             //network.displayNodes();
 
             Display d = new Display(network.getNodes(), network.getLinks(), size);
-           /* Graphics g = d.getGraphics();
+            Graphics g = d.getGraphics();
             int m = 1;
             while(m< network.getNodes().size()) {
                 System.out.println();
@@ -215,7 +216,7 @@ public class Main {
                 d.paint(g);
 
                 m++;
-            }*/
+            }
             network.displayPolynomialPool();
             pr.close();
         } catch (Exception e) {

@@ -11,11 +11,13 @@ public class Polynomial {
 
     private long[] coefs; // [a, b, c...n] => a + b*(x+y) + c*x*y+...+n*(x^n)*(y^n)
     private long module;
+    private int order;
 
     public Polynomial(Polynomial polynomial) {
         this.coefs = new long[polynomial.coefs.length];
+        // -> !!!
         System.arraycopy(polynomial.coefs, 0, this.coefs, 0, polynomial.coefs.length);
-//        this.coefs = polynomial.coefs;
+        // WRONG !!! : this.coefs = polynomial.coefs;
         this.module = polynomial.module;
     }
 
@@ -27,7 +29,11 @@ public class Polynomial {
         return coefs;
     }
 
-    public Polynomial(long[] coefs) {
+    public int getOrder() {
+        return order;
+    }
+
+    public Polynomial(long[] coefs, int order) {
         int randomMultiplier = ThreadLocalRandom.current().nextInt(1, 9 + 1); // Random int in [1;9]
 //        this.module = (long) (randomMultiplier * Math.pow(2, 8));
         this.module = (long) Math.pow(2,8);
@@ -35,6 +41,7 @@ public class Polynomial {
             coefs[i] %= this.module;
         }
         this.coefs = coefs;
+        this.order = order;
         //System.out.println(this.coefs.length);
     }
 
@@ -45,7 +52,7 @@ public class Polynomial {
 
     @Override
     public String toString() {
-        return "Polynomial : " + Arrays.toString(coefs);
+        return "Polynomial : " + Arrays.toString(coefs) + ", order " + this.order;
     }
 
     /**
@@ -56,7 +63,7 @@ public class Polynomial {
      */
     public void applyIdToCoefs(int id) {
         if(this.coefs != null) {
-            System.out.println(Arrays.toString(this.coefs));
+            //System.out.println(Arrays.toString(this.coefs));
             for(int i = 0; i < this.coefs.length; i++) {
                 int order = (i+1) / 2;
                 double idPowered = Math.pow(id, order); // ID * Coef (in the coef table)
@@ -80,7 +87,7 @@ public class Polynomial {
         }
     }
 
-    public static Polynomial generatePolynomial(int maxPolynomialOrder, int biggestCoef) {
+    public static Polynomial generatePolynomial(int maxPolynomialOrder, int biggestCoef, int randomPolynomialOrder) {
         // generate random coefs
         long[] coefs = new long[maxPolynomialOrder + 1]; // example : order = 2 : 3 coefs
         for(int i = 0; i <= maxPolynomialOrder; i++) {
@@ -89,7 +96,7 @@ public class Polynomial {
             coefs[i] = randomCoef;
         }
 
-        return new Polynomial(coefs);
+        return new Polynomial(coefs, randomPolynomialOrder);
     }
 
     public static List<Integer> getCommonIds(HashMap<Integer, Polynomial> nodePolynomials, HashMap<Integer, Polynomial> neighbourPolynomials) {
