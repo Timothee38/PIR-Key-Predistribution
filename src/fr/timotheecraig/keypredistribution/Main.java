@@ -21,7 +21,7 @@ public class Main {
         int amountOfKeys = 1000;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;
-        int polynomialsOrder = 2;
+        int polynomialsOrder = 1;
         int degree = 4; // 4 nodes
         int size = 1000; // 1000 meters
         int nodeEmissionRadius = 50; // 50 meters
@@ -191,10 +191,10 @@ public class Main {
             //network.displayLinks();
             //network.displayNodes();
 
-            Display d = new Display(network.getNodes(), network.getLinks(), size);
-            Graphics g = d.getGraphics();
+            Display d = new Display(network, size, degree, keysPerNode, amountOfNodesToCompromise, amountOfKeys, polynomialsOrder, amountOfNodesToCompromise);
+            /*Graphics g = d.getGraphics();
             int m = 1;
-           /* while(m< network.getNodes().size()) {
+            while(m< network.getNodes().size()) {
                 System.out.println();
                 System.out.println("            Attacker attack the network           ");
                 System.out.println("--------------------------------------------------");
@@ -211,13 +211,14 @@ public class Main {
 //                m++;
                 pr.println(m+";"+((double) amountOfCompromisedLinks / amountOfLinks));
 
-                d.setLinks(network.getLinks());
-                d.setNodes(network.getNodes());
+                d.setNetwork(network);
+//                d.setAmountOfNodesToCompromise(m);
                 d.paint(g);
 
                 m++;
             }
-            network.displayPolynomialPool();*/
+            d.setAmountOfNodesToCompromise(m);*/
+            network.displayPolynomialPool();
             pr.close();
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package fr.timotheecraig.keypredistribution.ui;
 
 import fr.timotheecraig.keypredistribution.enums.LinkState;
 import fr.timotheecraig.keypredistribution.main.Link;
+import fr.timotheecraig.keypredistribution.main.Network;
 import fr.timotheecraig.keypredistribution.main.Node;
 
 import javax.swing.*;
@@ -12,21 +13,15 @@ import java.util.ArrayList;
  * Created by timothee on 15/06/17.
  */
 public class NetworkDisplay extends JPanel {
-    ArrayList<Node> sensors;
-    ArrayList<Link> links;
+    private Network network;
 
-    public void setNodes(ArrayList<Node> nodes) {
-        this.sensors = nodes;
+    public void setNetwork(Network network) {
+        this.network = network;
     }
 
-    public void setLinks(ArrayList<Link> links) {
-        this.links = links;
-    }
-
-    public NetworkDisplay(ArrayList<Node> s, ArrayList<Link> l, int gridSize) {
+    public NetworkDisplay(Network network, int gridSize) {
         super();
-        this.sensors = s;
-        this.links = l;
+        this.network = network;
 
         this.setPreferredSize(new Dimension(gridSize, gridSize));
     }
@@ -35,6 +30,8 @@ public class NetworkDisplay extends JPanel {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         //perform your drawings here..
+        ArrayList<Link> links = network.getLinks();
+        ArrayList<Node> sensors = network.getNodes();
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 1000, 1000);
         // Draw links

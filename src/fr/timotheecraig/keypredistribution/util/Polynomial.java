@@ -75,11 +75,11 @@ public class Polynomial {
                 else if((i%2 == 0) && (i != 0)) { // indexes 2,4,6,8...
                     long tempVal = this.coefs[i-1];
                     long tempVal2 = this.coefs[i];
-                    System.out.println(tempVal + " " + tempVal2);
+//                    System.out.println(tempVal + " " + tempVal2);
                     this.coefs[order] = (long) (tempVal2 * idPowered + tempVal);
                     this.coefs[order] %= this.module;
-                    System.out.println(idPowered+ " " + order +" "+ i);
-                    System.out.println(this.coefs[order] == (115+126*488)%256);
+//                    System.out.println(idPowered+ " " + order +" "+ i);
+//                    System.out.println(this.coefs[order] == (115+126*488)%256);
                 }
             }
             this.coefs = Arrays.copyOfRange(this.coefs, 0, (((this.coefs.length)/2)+1));

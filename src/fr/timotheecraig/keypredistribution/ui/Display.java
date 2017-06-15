@@ -1,69 +1,81 @@
 package fr.timotheecraig.keypredistribution.ui;
 
-import fr.timotheecraig.keypredistribution.enums.LinkState;
-import fr.timotheecraig.keypredistribution.main.Link;
-import fr.timotheecraig.keypredistribution.main.Node;
+import fr.timotheecraig.keypredistribution.main.Network;
+import fr.timotheecraig.keypredistribution.ui.listeners.MySliderListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Credits to Max for this class.
  * Modified by Timothee on 07/06/2017.
  */
 public class Display extends JFrame {
-//    ArrayList<Node> sensors;
-//    ArrayList<Link> links;
 
-    public Display(ArrayList<Node> s, ArrayList<Link> l, int gridSize){
+    private NetworkDisplay networkDisplay;
+    private JSlider amountOfNodesToCompromise;
+
+    public Display(Network network, int gridSize, int deg, int keysPerNode, int nodesToCompr, int amountOfKeys, int polynomialsOrder, int nodesToCompromise){
         super("Representation of the sensor network");
-//        this.sensors = s;
-//        this.links = l;
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.LINE_AXIS));
-        JPanel networkDisplay = new NetworkDisplay(s, l, gridSize);
+        NetworkDisplay networkDisplay = new NetworkDisplay(network, gridSize);
+        this.networkDisplay = networkDisplay;
 
         JPanel sliderPanel = new JPanel();
         sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.Y_AXIS));
 
+        MySliderListener mySliderListener = new MySliderListener(network, networkDisplay, amountOfKeys, polynomialsOrder, keysPerNode, nodesToCompromise);
+
         JLabel degreeLabel = new JLabel();
         degreeLabel.setText("Degree");
-        JSlider degree = new JSlider(JSlider.HORIZONTAL, 0, 500, 0);
+        JSlider degree = new JSlider(JSlider.HORIZONTAL, 1, 31, deg);
+        degree.setName("degree");
+        degree.addChangeListener(mySliderListener);
         degreeLabel.setLabelFor(degree);
-        degree.setMajorTickSpacing(100);
-        degree.setMinorTickSpacing(10);
+        degree.setMajorTickSpacing(5);
+        degree.setMinorTickSpacing(1);
         degree.setPaintTicks(true);
         degree.setPaintLabels(true);
 
-        JLabel amountOfKeysPerNodeLabel = new JLabel("Amount of keys per node");
-        JSlider amountOfKeysPerNode = new JSlider(JSlider.HORIZONTAL, 0, 500, 0);
-        amountOfKeysPerNode.setMajorTickSpacing(100);
-        amountOfKeysPerNode.setMinorTickSpacing(10);
+        JLabel amountOfKeysPerNodeLabel = new JLabel("Total amount of keys");
+        JSlider amountOfKeysPerNode = new JSlider(JSlider.HORIZONTAL, 1, 15001, amountOfKeys);
+        amountOfKeysPerNode.setName("totalAmountOfKeys");
+        amountOfKeysPerNode.addChangeListener(mySliderListener);
+        amountOfKeysPerNode.setMajorTickSpacing(2500);
+        amountOfKeysPerNode.setMinorTickSpacing(1000);
         amountOfKeysPerNode.setPaintTicks(true);
         amountOfKeysPerNode.setPaintLabels(true);
 
+        JLabel totalAmountLabel = new JLabel("Amount of keys per node");
+        JSlider totalAmount = new JSlider(JSlider.HORIZONTAL, 1, 201, keysPerNode);
+        totalAmount.setName("amountOfKeysPerNode");
+        totalAmount.addChangeListener(mySliderListener);
+        totalAmount.setMajorTickSpacing(40);
+        totalAmount.setMinorTickSpacing(10);
+        totalAmount.setPaintTicks(true);
+        totalAmount.setPaintLabels(true);
+
         JLabel amountOfNodesToCompromiseLabel = new JLabel("Amount of nodes to compromise", JLabel.CENTER);
-        JSlider amountOfNodesToCompromise = new JSlider(JSlider.HORIZONTAL, 0, 500, 0);
+        JSlider amountOfNodesToCompromise = new JSlider(JSlider.HORIZONTAL, 1, network.getNodes().size(), nodesToCompr);
+        amountOfNodesToCompromise.setName("amountOfNodesToCompromise");
+        amountOfNodesToCompromise.addChangeListener(mySliderListener);
         amountOfNodesToCompromise.setMajorTickSpacing(100);
         amountOfNodesToCompromise.setMinorTickSpacing(10);
         amountOfNodesToCompromise.setPaintTicks(true);
         amountOfNodesToCompromise.setPaintLabels(true);
 
+        this.amountOfNodesToCompromise = amountOfNodesToCompromise;
 
         sliderPanel.add(degreeLabel);
         sliderPanel.add(degree);
+        sliderPanel.add(totalAmountLabel);
+        sliderPanel.add(totalAmount);
         sliderPanel.add(amountOfKeysPerNodeLabel);
         sliderPanel.add(amountOfKeysPerNode);
         sliderPanel.add(amountOfNodesToCompromiseLabel);
         sliderPanel.add(amountOfNodesToCompromise);
 
-//        degreeLabel.repaint();
-//        degree.repaint();
-//        amountOfKeysPerNodeLabel.repaint();
-//        amountOfKeysPerNode.repaint();
-//        amountOfNodesToCompromiseLabel.repaint();
-//        amountOfNodesToCompromise.repaint();
 
         getContentPane().add(networkDisplay, BorderLayout.LINE_START);
         getContentPane().add(sliderPanel, BorderLayout.LINE_END);
@@ -76,32 +88,11 @@ public class Display extends JFrame {
         setVisible(true);
     }
 
-//    public void toto(Graphics g){
-//        g.setColor(Color.BLACK);
-//        g.fillRect(0, 0, 1000, 1000);
-//        // Draw links
-//        g.setColor(Color.WHITE);
-//        for(int j = 0; j < links.size(); j++){
-//            if(links.get(j).getLinkState() == LinkState.compromised) {
-//                g.setColor(Color.RED);
-//            }
-//            else {
-//                g.setColor(Color.WHITE);
-//            }
-//            g.drawLine(links.get(j).getNode1().getCoordX(), links.get(j).getNode1().getCoordY(), links.get(j).getNode2().getCoordX(), links.get(j).getNode2().getCoordY());
-//        }
-//        // Draw nodes
-//        g.setColor(Color.GREEN);
-//        for(int i = 0; i<sensors.size(); i++){
-//            g.drawLine(sensors.get(i).getCoordX(), sensors.get(i).getCoordY(), sensors.get(i).getCoordX(), sensors.get(i).getCoordY());
-//        }
-//    }
-//
-//    public void setNodes(ArrayList<Node> nodes) {
-//        this.sensors = nodes;
-//    }
-//
-//    public void setLinks(ArrayList<Link> links) {
-//        this.links = links;
-//    }
+    public void setNetwork(Network network) {
+        this.networkDisplay.setNetwork(network);
+    }
+
+    public void setAmountOfNodesToCompromise(int amountOfNodes) {
+        this.amountOfNodesToCompromise.setValue(amountOfNodes);
+    }
 }

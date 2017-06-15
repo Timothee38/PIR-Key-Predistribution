@@ -24,6 +24,9 @@ public class Network {
     private double density;
     private int totalNumberOfLinks = 0;
     private int totalNumberOfSecuredLinks = 0;
+    private int nodeEmissionRadius;
+    private int size;
+    private int degree;
 
     // Accessors
     public String getName() {
@@ -312,6 +315,9 @@ public class Network {
     public static Network getByDegree(int degree, int size, int nodeEmissionRadius, NetworkType scheme) {
         Network network = new Network("My WSN");
         network.density = network.calculateDensity(degree, nodeEmissionRadius);
+        network.size = size;
+        network.degree = degree;
+        network.nodeEmissionRadius = nodeEmissionRadius;
         int amountOfNodesToGenerate = (int) (network.density * Math.pow(size, 2));
         network.addAmountOfNodes(amountOfNodesToGenerate, nodeEmissionRadius, size);
         network.scheme = scheme;
@@ -422,4 +428,15 @@ public class Network {
         return this.name + " : " + nodesLen + " nodes.";
     }
 
+    public int getSize() {
+        return this.size;
+    }
+
+    public int getEmissionRadius() {
+        return this.nodeEmissionRadius;
+    }
+
+    public int getDegree() {
+        return this.degree;
+    }
 }
