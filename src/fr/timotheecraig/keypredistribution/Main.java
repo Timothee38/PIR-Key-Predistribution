@@ -17,12 +17,12 @@ public class Main {
 
         // Travailler avec unsigned ints et la plus grande structure java
 
-        int keysPerNode = 200;
-        int amountOfKeys = 10000;
+        int keysPerNode = 70;
+        int amountOfKeys = 1000;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;
         int polynomialsOrder = 2;
-        int degree = 10; // 4 nodes
+        int degree = 4; // 4 nodes
         int size = 1000; // 1000 meters
         int nodeEmissionRadius = 50; // 50 meters
 
@@ -194,7 +194,7 @@ public class Main {
             Display d = new Display(network.getNodes(), network.getLinks(), size);
             Graphics g = d.getGraphics();
             int m = 1;
-            while(m< network.getNodes().size()) {
+           /* while(m< network.getNodes().size()) {
                 System.out.println();
                 System.out.println("            Attacker attack the network           ");
                 System.out.println("--------------------------------------------------");
@@ -217,7 +217,7 @@ public class Main {
 
                 m++;
             }
-            network.displayPolynomialPool();
+            network.displayPolynomialPool();*/
             pr.close();
         } catch (Exception e) {
             e.printStackTrace();
