@@ -87,16 +87,15 @@ public class Polynomial {
         }
     }
 
-    public static Polynomial generatePolynomial(int maxPolynomialOrder, int biggestCoef, int randomPolynomialOrder) {
+    public static Polynomial generatePolynomial(int maxPolynomialOrder, int biggestCoef) {
         // generate random coefs
-        long[] coefs = new long[maxPolynomialOrder + 1]; // example : order = 2 : 3 coefs
-        for(int i = 0; i <= maxPolynomialOrder; i++) {
+        long[] coefs = new long[2*maxPolynomialOrder + 1]; // example : order = 2 : 3 coefs
+        for(int i = 0; i <= 2*maxPolynomialOrder; i++) {
             int randomCoef = ThreadLocalRandom.current().nextInt(0, biggestCoef + 1);
-
             coefs[i] = randomCoef;
         }
-
-        return new Polynomial(coefs, randomPolynomialOrder);
+        System.out.println(coefs.length);
+        return new Polynomial(coefs, maxPolynomialOrder);
     }
 
     public static List<Integer> getCommonIds(HashMap<Integer, Polynomial> nodePolynomials, HashMap<Integer, Polynomial> neighbourPolynomials) {
@@ -116,10 +115,10 @@ public class Polynomial {
         if(this.coefs != null) {
             for(int i = 0; i < this.coefs.length; i++) {
                 // [a, b, c, d]... f(x) = a + bx + cx² + dx³...
-                ret += (int) (this.coefs[i] * Math.pow(id, i));
-                ret %= this.module;
+                ret += (this.coefs[i] * Math.pow(id, i))%this.module;
             }
         }
+        ret %= this.module;
         return ret;
     }
 

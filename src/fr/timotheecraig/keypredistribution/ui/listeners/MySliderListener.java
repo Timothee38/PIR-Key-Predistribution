@@ -44,7 +44,7 @@ public class MySliderListener implements ChangeListener {
 
             switch (src.getName()) {
                 case "degree":
-                    degree = (int)src.getValue();
+                    degree = (int) src.getValue();
                     break;
                 case "amountOfKeysPerNode":
                     amountOfKeysPerNode = (int) src.getValue();

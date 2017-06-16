@@ -21,7 +21,7 @@ public class Main {
         int amountOfKeys = 1000;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;
-        int polynomialsOrder = 1;
+        int polynomialsOrder = 5;
         int degree = 4; // 4 nodes
         int size = 1000; // 1000 meters
         int nodeEmissionRadius = 50; // 50 meters

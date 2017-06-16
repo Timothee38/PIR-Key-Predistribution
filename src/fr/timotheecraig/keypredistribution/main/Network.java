@@ -236,8 +236,7 @@ public class Network {
         if (this.mainPolynomialsPool == null) {
             this.mainPolynomialsPool = new HashMap<Integer, Polynomial>();
             for (int i = 0; i < amount; i++) {
-                int randomPolynomialOrder = ThreadLocalRandom.current().nextInt(1, maxPolynomialOrder + 1);
-                this.mainPolynomialsPool.put(i, Polynomial.generatePolynomial(maxPolynomialOrder, biggestCoef, maxPolynomialOrder));
+                this.mainPolynomialsPool.put(i, Polynomial.generatePolynomial(maxPolynomialOrder, biggestCoef));
             }
         }
 
