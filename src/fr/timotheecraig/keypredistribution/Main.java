@@ -17,18 +17,17 @@ public class Main {
 
         // Travailler avec unsigned ints et la plus grande structure java
 
-        int keysPerNode = 70;
-        int amountOfKeys = 1000;
+        int keysPerNode = 3;
+        int amountOfKeys = 25;
         int sizeOfKey = 128;
         int amountOfNodesToCompromise = 15;
-        int polynomialsOrder = 5;
-        int degree = 4; // 4 nodes
+        int polynomialsOrder = 66;
+        int degree = 8; // 4 nodes
         int size = 1000; // 1000 meters
         int nodeEmissionRadius = 50; // 50 meters
 
         // BASIC SCHEME
 
-/*
         try {
 
             PrintWriter pr = new PrintWriter("data-collected.txt", "UTF-8");
@@ -86,39 +85,38 @@ public class Main {
             System.out.println("Amount of links created: " + amountOfLinks);
 
             int maxAmountOfNodes = network.getNodes().size();
-            Display d = new Display(network.getNodes(), network.getLinks(), size);
-            Graphics g = d.getGraphics();
             int t = 1;
-            while(t < maxAmountOfNodes) {
-                System.out.println("");
-                System.out.println("           Attacker attacks the network           ");
-                System.out.println("--------------------------------------------------");
-                System.out.println("");
+            //while(t < maxAmountOfNodes) {
+            System.out.println("");
+            System.out.println("           Attacker attacks the network           ");
+            System.out.println("--------------------------------------------------");
+            System.out.println("");
 
-                int amountOfCompromisedLinks = Attacker.compromiseNetwork_Basic_Scheme(t, network);
+            int amountOfCompromisedLinks = Attacker.compromiseNetwork_Basic_Scheme(t, network);
 
-                System.out.println("Resilience for "+ t +" nodes compromised, with "
-                        + keysPerNode + " keys each : " + ((double) amountOfCompromisedLinks / amountOfLinks));
+            System.out.println("Resilience for "+ t +" nodes compromised, with "
+                    + keysPerNode + " keys each : " + ((double) amountOfCompromisedLinks / amountOfLinks));
 
-                // The generated graph will look bad here because of the randomness in choosing node to corrupt
-                // Potentially we could make it less random, in order to have a nicer graph. (giving the attacker the indexes
-                // of the nodes to corrupt.
-                pr.println(t+";"+((double)amountOfCompromisedLinks/amountOfLinks));
-                d.setLinks(network.getLinks());
-                d.setNodes(network.getNodes());
-                d.paint(g);
-                //Attacker.uncompromiseNodes(network);
-                t++;
+            // The generated graph will look bad here because of the randomness in choosing node to corrupt
+            // Potentially we could make it less random, in order to have a nicer graph. (giving the attacker the indexes
+            // of the nodes to corrupt.
 
-                Thread.sleep(500);
+            Display d = new Display(network, size, degree, keysPerNode, amountOfNodesToCompromise, amountOfKeys, polynomialsOrder, amountOfNodesToCompromise);
+            Graphics g = d.getGraphics();
 
-            }
+            pr.println(t+";"+((double)amountOfCompromisedLinks/amountOfLinks));
+            //Attacker.uncompromiseNodes(network);
+//                t++;
+
+//                Thread.sleep(500);
+
+            //}
 
             pr.close();
 
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
 
         //
         //
@@ -126,7 +124,7 @@ public class Main {
 
 
         // Polynomial pool-based key pre-distribution for Wireless Sensor Networks (after basic scheme)
-
+/*
         try {
 
             //int m = 5; // Size of subset
@@ -192,7 +190,7 @@ public class Main {
             //network.displayNodes();
 
             Display d = new Display(network, size, degree, keysPerNode, amountOfNodesToCompromise, amountOfKeys, polynomialsOrder, amountOfNodesToCompromise);
-            /*Graphics g = d.getGraphics();
+            Graphics g = d.getGraphics();
             int m = 1;
             while(m< network.getNodes().size()) {
                 System.out.println();
@@ -208,21 +206,20 @@ public class Main {
 
                 //Attacker.compromiseNodes(10, network);
                 //network.displayNodes(NodeState.compromised);
-//                m++;
                 pr.println(m+";"+((double) amountOfCompromisedLinks / amountOfLinks));
 
                 d.setNetwork(network);
-//                d.setAmountOfNodesToCompromise(m);
+                d.setAmountOfNodesToCompromise(m);
                 d.paint(g);
 
                 m++;
             }
-            d.setAmountOfNodesToCompromise(m);*/
+            d.setAmountOfNodesToCompromise(m);
             network.displayPolynomialPool();
             pr.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
 
     }

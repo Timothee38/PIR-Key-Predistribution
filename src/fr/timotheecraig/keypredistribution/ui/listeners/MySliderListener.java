@@ -1,6 +1,7 @@
 package fr.timotheecraig.keypredistribution.ui.listeners;
 
 import fr.timotheecraig.keypredistribution.Main;
+import fr.timotheecraig.keypredistribution.enums.NetworkType;
 import fr.timotheecraig.keypredistribution.external.Attacker;
 import fr.timotheecraig.keypredistribution.main.Network;
 import fr.timotheecraig.keypredistribution.ui.NetworkDisplay;
@@ -62,22 +63,42 @@ public class MySliderListener implements ChangeListener {
             if(src.getName() == "degree" || src.getName() == "amountOfKeysPerNode" || src.getName() == "totalAmountOfKeys") {
                 network = Network.getByDegree(degree, network.getSize(), network.getEmissionRadius(), network.getScheme());
 
-                network.generatePolynomialPool(totalAmountOfKeys, polynomialsOrder, (int) Math.pow(2, 8));
+                if(network.getScheme() == NetworkType.polynomialScheme) {
+                    network.generatePolynomialPool(totalAmountOfKeys, polynomialsOrder, (int) Math.pow(2, 8));
+                }
+                else if(network.getScheme() == NetworkType.basicScheme) {
+                    network.addAmountOfKeys(amountOfKeys, 128);
+                }
 
                 networkDisplay.setNetwork(network);
 
-                network.predistributePolynomials(amountOfKeysPerNode);
+                if(network.getScheme() == NetworkType.polynomialScheme) {
+                    network.predistributePolynomials(amountOfKeysPerNode);
+                }
+                else if(network.getScheme() == NetworkType.basicScheme) {
+                    network.predistributeKeys(amountOfKeysPerNode);
+                }
                 network.setNodesInitialised();
 
                 network.neighbourDiscovery();
-                network.createLinks_polynomials();
+                if(network.getScheme() == NetworkType.polynomialScheme) {
+                    network.createLinks_polynomials();
+                }
+                else if(network.getScheme() == NetworkType.basicScheme) {
+                    network.createLinks_basic();
+                }
 
 
                 networkDisplay.paint(networkDisplay.getGraphics());
             }
             else {
                 Attacker.uncompromiseNodes(network);
-                Attacker.compromiseNetwork_Polynomial_Scheme(nodesToCompromise, network);
+                if(network.getScheme() == NetworkType.polynomialScheme) {
+                    Attacker.compromiseNetwork_Polynomial_Scheme(nodesToCompromise, network);
+                }
+                else if(network.getScheme() == NetworkType.basicScheme) {
+                    Attacker.compromiseNetwork_Basic_Scheme(nodesToCompromise, network);
+                }
                 networkDisplay.paint(networkDisplay.getGraphics());
             }
         }

@@ -34,7 +34,7 @@ public class Polynomial {
     }
 
     public Polynomial(long[] coefs, int order) {
-        int randomMultiplier = ThreadLocalRandom.current().nextInt(1, 9 + 1); // Random int in [1;9]
+//        int randomMultiplier = ThreadLocalRandom.current().nextInt(1, 9 + 1); // Random int in [1;9]
 //        this.module = (long) (randomMultiplier * Math.pow(2, 8));
         this.module = (long) Math.pow(2,8);
         for(int i = 0; i < coefs.length; i++) {
@@ -115,10 +115,11 @@ public class Polynomial {
         if(this.coefs != null) {
             for(int i = 0; i < this.coefs.length; i++) {
                 // [a, b, c, d]... f(x) = a + bx + cx² + dx³...
-                ret += (this.coefs[i] * Math.pow(id, i))%this.module;
+                long calculatedValue = (long) (this.coefs[i]*Math.pow(id, i));
+                ret += (calculatedValue)%this.module;
             }
         }
-        ret %= this.module;
+        ret %= (int)this.module;
         return ret;
     }
 
