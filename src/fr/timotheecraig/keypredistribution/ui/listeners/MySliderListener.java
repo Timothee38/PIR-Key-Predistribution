@@ -35,7 +35,6 @@ public class MySliderListener implements ChangeListener {
     @Override
     public void stateChanged(ChangeEvent e) {
         JSlider src = (JSlider) e.getSource();
-        System.out.println(src.getName());
         int degree = network.getDegree();
         int amountOfKeysPerNode = this.keysPerNode;
         int nodesToCompromise = this.amountOfNodesToCompromise;

@@ -35,13 +35,13 @@ public class Attacker {
                 ArrayList<Integer> indexes = new ArrayList<Integer>();
 
                 // Compromise nodes
-                int randomIndex = ThreadLocalRandom.current().nextInt(0, n.getNodes().size());
+//                int randomIndex = ThreadLocalRandom.current().nextInt(0, n.getNodes().size());
                 for (int i = 0; i < t; i++) {
-                    while (indexes.contains(randomIndex)) {
-                        randomIndex = ThreadLocalRandom.current().nextInt(0, n.getNodes().size());
-                    }
-                    indexes.add(randomIndex);
-                    Node nodeToCompromise = n.getNodes().get(randomIndex);
+//                    while (indexes.contains(randomIndex)) {
+//                        randomIndex = ThreadLocalRandom.current().nextInt(0, n.getNodes().size());
+//                    }
+//                    indexes.add(randomIndex);
+                    Node nodeToCompromise = n.getNodes().get(i);
                     nodeToCompromise.setState(NodeState.compromised);
                     compromisedKeys.addAll(nodeToCompromise.getKeys());
                 }
