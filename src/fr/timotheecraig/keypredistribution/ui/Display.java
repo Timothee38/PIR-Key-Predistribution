@@ -57,7 +57,7 @@ public class Display extends JFrame {
         totalAmount.setPaintLabels(true);
 
         JLabel amountOfNodesToCompromiseLabel = new JLabel("Amount of nodes to compromise", JLabel.CENTER);
-        JSlider amountOfNodesToCompromise = new JSlider(JSlider.HORIZONTAL, 1, network.getNodes().size(), nodesToCompr);
+        JSlider amountOfNodesToCompromise = new JSlider(JSlider.HORIZONTAL, 0, network.getNodes().size(), nodesToCompr);
         amountOfNodesToCompromise.setName("amountOfNodesToCompromise");
         amountOfNodesToCompromise.addChangeListener(mySliderListener);
         amountOfNodesToCompromise.setMajorTickSpacing(100);

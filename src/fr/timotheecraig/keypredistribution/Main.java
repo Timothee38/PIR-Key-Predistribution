@@ -17,12 +17,12 @@ public class Main {
 
         // Travailler avec unsigned ints et la plus grande structure java
 
-        int keysPerNode = 3;
-        int amountOfKeys = 25;
+        int keysPerNode = 25;
+        int amountOfKeys = 1000;
         int sizeOfKey = 128;
-        int amountOfNodesToCompromise = 15;
+        int amountOfNodesToCompromise = 0;
         int polynomialsOrder = 66;
-        int degree = 8; // 4 nodes
+        int degree = 6; // 4 nodes
         int size = 1000; // 1000 meters
         int nodeEmissionRadius = 50; // 50 meters
 
@@ -92,10 +92,10 @@ public class Main {
             System.out.println("--------------------------------------------------");
             System.out.println("");
 
-            int amountOfCompromisedLinks = Attacker.compromiseNetwork_Basic_Scheme(t, network);
+//            int amountOfCompromisedLinks = Attacker.compromiseNetwork_Basic_Scheme(t, network);
 
-            System.out.println("Resilience for "+ t +" nodes compromised, with "
-                    + keysPerNode + " keys each : " + ((double) amountOfCompromisedLinks / amountOfLinks));
+//            System.out.println("Resilience for "+ t +" nodes compromised, with "
+//                    + keysPerNode + " keys each : " + ((double) amountOfCompromisedLinks / amountOfLinks));
 
             // The generated graph will look bad here because of the randomness in choosing node to corrupt
             // Potentially we could make it less random, in order to have a nicer graph. (giving the attacker the indexes
@@ -104,7 +104,7 @@ public class Main {
             Display d = new Display(network, size, degree, keysPerNode, amountOfNodesToCompromise, amountOfKeys, polynomialsOrder, amountOfNodesToCompromise);
             Graphics g = d.getGraphics();
 
-            pr.println(t+";"+((double)amountOfCompromisedLinks/amountOfLinks));
+//            pr.println(t+";"+((double)amountOfCompromisedLinks/amountOfLinks));
             //Attacker.uncompromiseNodes(network);
 //                t++;
 
