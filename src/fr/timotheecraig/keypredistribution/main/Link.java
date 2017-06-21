@@ -84,4 +84,7 @@ public class Link {
         return node1.getName() + " - " + node2.getName() + " : " + this.linkState.name();
     }
 
+    public void setKey(Key key) {
+        this.key = key;
+    }
 }

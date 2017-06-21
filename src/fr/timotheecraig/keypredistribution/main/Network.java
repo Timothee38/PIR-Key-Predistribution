@@ -1,5 +1,6 @@
 package fr.timotheecraig.keypredistribution.main;
 
+import fr.timotheecraig.keypredistribution.enums.LinkState;
 import fr.timotheecraig.keypredistribution.enums.NetworkType;
 import fr.timotheecraig.keypredistribution.enums.NodeState;
 import fr.timotheecraig.keypredistribution.util.Coordinates;
@@ -336,6 +337,7 @@ public class Network {
                         for(Node node: nNeighbours) {
                             if(!node.isVisited) { // if the neighbour of n wasn't visited
                                 this.totalNumberOfLinks++;
+                                Link l = new Link(node, n, LinkState.down);
                                 this.links = this.links == null ? new ArrayList<Link>() : this.links;
                                 // perform temporary copies
                                 ArrayList<Key> neighbourKeys = new ArrayList<Key>(node.getKeys());
@@ -344,8 +346,10 @@ public class Network {
                                 nodeKeys.retainAll(neighbourKeys);
                                 if(nodeKeys.size() > 0) { // If they share a common key
                                     this.totalNumberOfSecuredLinks++;
-                                    this.links.add(new Link(node, n, nodeKeys.get(0)));
+                                    l.setLinkLinkState(LinkState.up);
+                                    l.setKey(nodeKeys.get(0));
                                 }
+                                this.links.add(l);
                             }
                         }
                     }

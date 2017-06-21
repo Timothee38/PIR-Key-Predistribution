@@ -36,8 +36,11 @@ public class NetworkDisplay extends JPanel {
         g.fillRect(0, 0, 1000, 1000);
         // Draw links
         g.setColor(Color.WHITE);
-        for(int j = 0; j < links.size(); j++){
-            if(links.get(j).getLinkState() == LinkState.compromised) {
+        for(int j = 0; j < links.size(); j++) {
+            if(links.get(j).getLinkState() == LinkState.down) {
+                g.setColor(Color.DARK_GRAY);
+            }
+            else if(links.get(j).getLinkState() == LinkState.compromised) {
                 g.setColor(Color.RED);
             }
             else {
